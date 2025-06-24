@@ -1,0 +1,107 @@
+name: TestivAI Visual Regression Approval
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  process-approval:
+    runs-on: ubuntu-latest
+    # Only run on PR comments that contain the approval commands
+    if: |
+      github.event.issue.pull_request &&
+      (contains(github.event.comment.body, '/approve-visuals') || 
+       contains(github.event.comment.body, '/reject-visuals'))
+    
+    permissions:
+      contents: write  # Needed to push changes back to the branch
+      pull-requests: write  # Needed to comment on PRs
+    
+    steps:
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            return {
+              ref: pullRequest.head.ref,
+              sha: pullRequest.head.sha
+            };
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ fromJson(steps.pr.outputs.result).ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Process visual approval/rejection
+        uses: mcbuddy/testivai-actions@v1.0.1
+        id: visual-approval
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          approvals-path: '.testivai/visual-regression/report/approvals.json'
+          report-path: '.testivai/visual-regression/report/report.json'
+          diff-directory: '.testivai/visual-regression/report/diff'
+          commit-message: 'chore: update visual regression baselines [skip ci]'
+          post-report-comment: 'true'
+      
+      - name: Comment on PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const result = '${{ steps.visual-approval.outputs.result }}';
+            const approvedFiles = JSON.parse('${{ steps.visual-approval.outputs.approved-files || "[]" }}');
+            const rejectedFiles = JSON.parse('${{ steps.visual-approval.outputs.rejected-files || "[]" }}');
+            
+            let message = '';
+            
+            if (result === 'success') {
+              message = '✅ Visual regression changes processed successfully!\n\n';
+              
+              if (approvedFiles.length > 0) {
+                message += '**Approved files:**\n';
+                approvedFiles.forEach(file => {
+                  message += `- ${file}\n`;
+                });
+                message += '\n';
+              }
+              
+              if (rejectedFiles.length > 0) {
+                message += '**Rejected files:**\n';
+                rejectedFiles.forEach(file => {
+                  message += `- ${file}\n`;
+                });
+                message += '\n';
+              }
+              
+              message += '### How to use approval commands:\n';
+              message += '- To approve all changes: `/approve-visuals`\n';
+              message += '- To approve a specific file: `/approve-visuals filename.png`\n';
+              message += '- To reject a specific file: `/reject-visuals filename.png`\n';
+            } else {
+              message = '❌ Failed to process visual regression changes. Please check the action logs for details.';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
