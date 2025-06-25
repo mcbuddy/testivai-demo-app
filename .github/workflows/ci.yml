@@ -42,9 +42,8 @@ jobs:
           
       - name: Upload visual regression artifacts
         uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && hashFiles('.testivai/**/*') != ''
         with:
           name: visual-regression-results
-          path: |
-            .testivai/
+          path: .testivai/
           retention-days: 30
