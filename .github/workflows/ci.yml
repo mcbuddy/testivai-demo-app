@@ -40,9 +40,18 @@ jobs:
           path: playwright-report/
           retention-days: 30
           
+      - name: Check for visual regression artifacts
+        id: check-testivai
+        run: |
+          if [ -d ".testivai" ] && [ "$(find .testivai -type f | wc -l)" -gt 0 ]; then
+            echo "artifacts-exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts-exist=false" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Upload visual regression artifacts
         uses: actions/upload-artifact@v4
-        if: always() && hashFiles('.testivai/**/*') != ''
+        if: always() && steps.check-testivai.outputs.artifacts-exist == 'true'
         with:
           name: visual-regression-results
           path: .testivai/
