@@ -18,7 +18,7 @@
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "testivai-cli": "^1.0.12"
+    "testivai-cli": "^1.0.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

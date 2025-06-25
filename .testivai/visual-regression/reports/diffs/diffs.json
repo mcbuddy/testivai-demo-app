@@ -1,0 +1,21 @@
+{
+  "summary": {
+    "totalTests": 6,
+    "passedTests": 6,
+    "changedTests": 0,
+    "newTests": 0,
+    "deletedTests": 0,
+    "hasDifferences": false
+  },
+  "testsWithDifferences": [],
+  "gitInfo": {
+    "sha": "26e73d6d7b2455ae2ac16259b5582e0ca4a3bb7b",
+    "shortSha": "26e73d6",
+    "author": "Budi Sugianto",
+    "email": "budisugianto777@gmail.com",
+    "date": "2025-06-24T00:28:21-04:00",
+    "message": "testivAI Demo App",
+    "branch": "main"
+  },
+  "generatedAt": "2025-06-25T02:42:39.448Z"
+}
