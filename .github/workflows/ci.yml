@@ -46,6 +46,5 @@ jobs:
         with:
           name: visual-regression-results
           path: |
-            tests/visual-regression/
             .testivai/
           retention-days: 30
