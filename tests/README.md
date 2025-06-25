@@ -53,8 +53,8 @@ npm run update-baselines     # Update baseline images with current screenshots
 
 The tests use the `testivai-visual-regression` library to perform visual regression testing. Screenshots are stored in:
 
-- **Baselines**: `./tests/visual-regression/baselines/` - Reference images
-- **Comparisons**: `./tests/visual-regression/comparisons/` - Current test images
+- **Baselines**: `./.testivai/visual-regression/baseline/` - Reference images
+- **Comparisons**: `./.testivai/visual-regression/compare/` - Current test images
 - **Diffs**: Generated automatically when differences are detected
 
 ### First Run
@@ -76,8 +76,8 @@ The tests are configured in `playwright.config.ts` with:
 The testivAI configuration includes:
 - **Framework**: Playwright
 - **Diff Threshold**: 0.1 (10% difference tolerance)
-- **Baseline Directory**: `./tests/visual-regression/baselines`
-- **Compare Directory**: `./tests/visual-regression/comparisons`
+- **Baseline Directory**: `./.testivai/visual-regression/baseline`
+- **Compare Directory**: `./.testivai/visual-regression/compare`
 
 ## GitHub Actions CI/CD
 
