@@ -1,4 +1,4 @@
-name: TestivAI Visual Regression Approval
+name: TestivAI Approve Visuals Comment
 
 on:
   issue_comment:
@@ -7,38 +7,21 @@ on:
 jobs:
   process-approval:
     runs-on: ubuntu-latest
-    # Only run on PR comments that contain the approval commands
+    # Only run on PR comments that contain the approval command
     if: |
       github.event.issue.pull_request &&
-      (contains(github.event.comment.body, '/approve-visuals') || 
-       contains(github.event.comment.body, '/reject-visuals'))
+      contains(github.event.comment.body, '/approve-visuals')
     
     permissions:
       contents: write  # Needed to push changes back to the branch
       pull-requests: write  # Needed to comment on PRs
     
     steps:
-      - name: Get PR details
-        id: pr
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: pullRequest } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number
-            });
-            return {
-              ref: pullRequest.head.ref,
-              sha: pullRequest.head.sha
-            };
-      
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ fromJson(steps.pr.outputs.result).ref }}
+          ref: ${{ github.event.issue.pull_request.head.ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,55 +32,56 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Process visual approval/rejection
-        uses: mcbuddy/testivai-actions@v1.0.1
-        id: visual-approval
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          approvals-path: '.testivai/visual-regression/report/approvals.json'
-          report-path: '.testivai/visual-regression/report/report.json'
-          diff-directory: '.testivai/visual-regression/report/diff'
-          commit-message: 'chore: update visual regression baselines [skip ci]'
-          post-report-comment: 'true'
+      - name: Get commenter info
+        id: commenter
+        run: |
+          echo "username=${{ github.event.comment.user.login }}" >> $GITHUB_OUTPUT
+          echo "email=${{ github.event.comment.user.login }}@users.noreply.github.com" >> $GITHUB_OUTPUT
+      
+      - name: Generate approvals.json
+        run: |
+          mkdir -p .testivai/visual-regression
+          cat > .testivai/visual-regression/approvals.json << 'EOF'
+          {
+            "approved": ["ALL"],
+            "rejected": [],
+            "new": [],
+            "deleted": [],
+            "meta": {
+              "author": "${{ steps.commenter.outputs.username }}",
+              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+              "source": "GitHub PR #${{ github.event.issue.number }}",
+              "pr_url": "https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}",
+              "commit_sha": "${{ github.sha }}",
+              "commit_url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+            }
+          }
+          EOF
+      
+      - name: Install TestivAI globally
+        run: npm install -g testivai
+      
+      - name: Run TestivAI compare with update baselines
+        run: testivai compare --update-baselines
+      
+      - name: Configure Git
+        run: |
+          git config user.name "${{ steps.commenter.outputs.username }}"
+          git config user.email "${{ steps.commenter.outputs.email }}"
+      
+      - name: Commit and push changes
+        run: |
+          git add .
+          git diff --staged --quiet || git commit -m "chore: update visual regression baselines [skip ci]"
+          git push origin ${{ github.event.issue.pull_request.head.ref }}
       
       - name: Comment on PR with results
-        if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = '${{ steps.visual-approval.outputs.result }}';
-            const approvedFiles = JSON.parse('${{ steps.visual-approval.outputs.approved-files || "[]" }}');
-            const rejectedFiles = JSON.parse('${{ steps.visual-approval.outputs.rejected-files || "[]" }}');
-            
-            let message = '';
-            
-            if (result === 'success') {
-              message = '✅ Visual regression changes processed successfully!\n\n';
-              
-              if (approvedFiles.length > 0) {
-                message += '**Approved files:**\n';
-                approvedFiles.forEach(file => {
-                  message += `- ${file}\n`;
-                });
-                message += '\n';
-              }
-              
-              if (rejectedFiles.length > 0) {
-                message += '**Rejected files:**\n';
-                rejectedFiles.forEach(file => {
-                  message += `- ${file}\n`;
-                });
-                message += '\n';
-              }
-              
-              message += '### How to use approval commands:\n';
-              message += '- To approve all changes: `/approve-visuals`\n';
-              message += '- To approve a specific file: `/approve-visuals filename.png`\n';
-              message += '- To reject a specific file: `/reject-visuals filename.png`\n';
-            } else {
-              message = '❌ Failed to process visual regression changes. Please check the action logs for details.';
-            }
+            const message = '✅ Visual regression changes approved and baselines updated!\n\n' +
+                           'All visual changes have been approved and the baseline images have been updated.';
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,

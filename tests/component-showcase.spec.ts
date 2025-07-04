@@ -38,8 +38,8 @@ test.describe('Component Showcase', () => {
   });
 
   test('should display alert components with correct variants', async ({ page }) => {
-    // Check success alert
-    const successAlert = page.locator('.alert--success');
+    // Check success alert in the alerts section specifically
+    const successAlert = page.locator('.alerts-container .alert--success');
     await expect(successAlert).toBeVisible();
     await expect(successAlert).toContainText('Your changes have been saved successfully!');
     
@@ -151,7 +151,7 @@ test.describe('Component Showcase', () => {
     
     // Check that components are still visible and properly arranged
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.alert--success')).toBeVisible();
+    await expect(page.locator('.alerts-container .alert--success')).toBeVisible();
     await expect(page.locator('.button--primary').first()).toBeVisible();
     await expect(page.locator('.card')).toHaveCount(3);
     

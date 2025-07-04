@@ -11,8 +11,11 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Component Showcase</h1>
-        <p>A collection of reusable React components</p>
+        <h1>🎨 Component Showcase</h1>
+        <p>A collection of reusable React components - Now with TestivAI Visual Regression Testing!</p>
+        <div className="header-badge">
+          <span className="badge">✨ Updated with TestivAI v1.0.10</span>
+        </div>
       </header>
 
       <main className="app-main">
@@ -84,10 +87,30 @@ function App() {
             />
           </div>
         </section>
+
+        {/* TestivAI Integration Section */}
+        <section className="component-section">
+          <h2>🧪 TestivAI Visual Regression Testing</h2>
+          <div className="testivai-info">
+            <Alert status="success">
+              This application now includes automated visual regression testing with TestivAI!
+            </Alert>
+            <div className="testivai-features">
+              <h3>Features Included:</h3>
+              <ul>
+                <li>✅ Automated screenshot comparison</li>
+                <li>✅ GitHub Actions integration</li>
+                <li>✅ PR comment approvals with <code>/approve-visuals</code></li>
+                <li>✅ Responsive design testing</li>
+                <li>✅ Component-level visual testing</li>
+              </ul>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="app-footer">
-        <p>Built with React, TypeScript, and Vite</p>
+        <p>Built with React, TypeScript, Vite, and TestivAI Visual Regression Testing</p>
       </footer>
     </div>
   )

@@ -163,8 +163,8 @@ This project uses the [TestivAI Visual Regression](https://github.com/mcbuddy/te
 
 Visual regression testing is configured with:
 - **Diff Threshold**: 0.1 (10% tolerance)
-- **Baseline Directory**: `./tests/visual-regression/baselines`
-- **Compare Directory**: `./tests/visual-regression/comparisons`
+- **Baseline Directory**: `.testivai/visual-regression/baselines`
+- **Compare Directory**: `.testivai/visual-regression/comparisons`
 - **Browser**: Chromium desktop
 
 ## Contributing
