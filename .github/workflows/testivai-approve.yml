@@ -39,24 +39,14 @@ jobs:
           echo "email=${{ github.event.comment.user.login }}@users.noreply.github.com" >> $GITHUB_OUTPUT
       
       - name: Generate approvals.json
-        run: |
-          mkdir -p .testivai/visual-regression
-          cat > .testivai/visual-regression/approvals.json << 'EOF'
-          {
-            "approved": ["ALL"],
-            "rejected": [],
-            "new": [],
-            "deleted": [],
-            "meta": {
-              "author": "${{ steps.commenter.outputs.username }}",
-              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-              "source": "GitHub PR #${{ github.event.issue.number }}",
-              "pr_url": "https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}",
-              "commit_sha": "${{ github.sha }}",
-              "commit_url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-            }
-          }
-          EOF
+        run: node ./scripts/create-approvals.cjs
+        env:
+          GITHUB_COMMENTER: ${{ steps.commenter.outputs.username }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          COMMIT_SHA: ${{ github.sha }}
+          APPROVALS_PATH: .testivai/visual-regression/approvals.json
       
       - name: Install TestivAI globally
         run: npm install -g testivai
