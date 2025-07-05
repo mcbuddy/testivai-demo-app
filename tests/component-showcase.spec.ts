@@ -8,8 +8,8 @@ test.describe('Component Showcase', () => {
     // Initialize testivAI with Playwright plugin
     vr = testivAI.init({
       framework: 'playwright',
-      baselineDir: './tests/visual-regression/baselines',
-      compareDir: './tests/visual-regression/comparisons',
+      baselineDir: './.testivai/visual-regression/baseline',
+      compareDir: './.testivai/visual-regression/compare',
       diffThreshold: 0.1
     }).use(playwrightPlugin());
   });
@@ -38,8 +38,8 @@ test.describe('Component Showcase', () => {
   });
 
   test('should display alert components with correct variants', async ({ page }) => {
-    // Check success alert
-    const successAlert = page.locator('.alert--success');
+    // Check success alert in the alerts section specifically
+    const successAlert = page.locator('.alerts-container .alert--success');
     await expect(successAlert).toBeVisible();
     await expect(successAlert).toContainText('Your changes have been saved successfully!');
     
@@ -151,8 +151,8 @@ test.describe('Component Showcase', () => {
     
     // Check that components are still visible and properly arranged
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.alert--success')).toBeVisible();
-    await expect(page.locator('.button--primary')).toBeVisible();
+    await expect(page.locator('.alerts-container .alert--success')).toBeVisible();
+    await expect(page.locator('.button--primary').first()).toBeVisible();
     await expect(page.locator('.card')).toHaveCount(3);
     
     // Take mobile screenshot for visual regression

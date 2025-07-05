@@ -2,16 +2,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
   line-height: 1.25rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   outline: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  min-width: 140px;
 }
 
 .button:focus {

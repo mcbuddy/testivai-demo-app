@@ -30,7 +30,7 @@ jobs:
         run: npm run build
         
       - name: Run Playwright tests
-        run: npm test
+        run: npm run test
         
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -40,12 +40,19 @@ jobs:
           path: playwright-report/
           retention-days: 30
           
+      - name: Check for visual regression artifacts
+        id: check-testivai
+        run: |
+          if [ -d ".testivai" ] && [ "$(find .testivai -type f | wc -l)" -gt 0 ]; then
+            echo "artifacts-exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts-exist=false" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Upload visual regression artifacts
         uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.check-testivai.outputs.artifacts-exist == 'true'
         with:
           name: visual-regression-results
-          path: |
-            tests/visual-regression/
-            .testivai/
+          path: .testivai/
           retention-days: 30
