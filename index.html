@@ -4,7 +4,39 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>TestivAI Demo App - Updated 02/10`</title>
+    <style>
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #333;
+      }
+      .button-container {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+      .button-container button {
+        transform: translateX(12px) translateY(-3px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+        border-radius: 8px;
+        padding: 0.5rem 1.2rem;
+      }
+      .button-container button:nth-child(even) {
+        transform: translateX(-12px) translateY(3px);
+      }
+      .button-container button:nth-child(3n) {
+        transform: translateX(0) translateY(-6px);
+      }
+      .button-container button:hover {
+        transform: translateX(0) translateY(0) scale(1.02);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.18);
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
