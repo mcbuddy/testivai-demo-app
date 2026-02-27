@@ -14,7 +14,7 @@ function App() {
         <h1>🎨 Component Showcase</h1>
         <p>A collection of reusable React components - Now with TestivAI Visual Regression Testing!</p>
         <div className="header-badge">
-          <span className="badge">✨ Updated with TestivAI v1.0.10</span>
+          <span className="badge">✨ Updated with TestivAI Witness v0.1.19</span>
         </div>
       </header>
 

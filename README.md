@@ -4,13 +4,13 @@ A React component showcase application demonstrating visual regression testing w
 
 ## Overview
 
-This project showcases a collection of reusable React components (Button, Card, Alert) with comprehensive testing including visual regression testing using the TestivAI Visual Regression library.
+This project showcases a collection of reusable React components (Button, Card, Alert) with comprehensive testing including visual regression testing using TestivAI Witness and Playwright.
 
 ## Features
 
 - **React Components**: Button, Card, and Alert components with multiple variants
 - **Component Showcase**: Interactive demo page displaying all components
-- **Visual Regression Testing**: Automated visual testing with TestivAI
+- **Visual Regression Testing**: Automated visual testing with TestivAI Witness
 - **Playwright Testing**: Comprehensive functional and visual tests
 - **CI/CD Integration**: GitHub Actions workflows for automated testing
 - **PR-based Approvals**: Visual regression approval workflow via PR comments
@@ -151,7 +151,7 @@ Enables PR-based visual regression approvals:
 
 ## Visual Regression Testing
 
-This project uses the [TestivAI Visual Regression](https://github.com/mcbuddy/testivai-visual-regression) library for automated visual testing:
+This project uses the [TestivAI Witness](https://github.com/testivai/witness) library for automated visual testing:
 
 - **Framework**: Playwright integration
 - **Baseline Management**: Automated baseline creation and updates
@@ -190,7 +190,7 @@ When making visual changes:
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
 - **Playwright** - End-to-end testing
-- **TestivAI Visual Regression** - Visual regression testing
+- **TestivAI Witness** - Visual regression testing
 - **GitHub Actions** - CI/CD automation
 
 ## License

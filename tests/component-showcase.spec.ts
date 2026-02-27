@@ -1,18 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { testivAI, playwrightPlugin } from 'testivai-visual-regression';
+import { testivai } from '@testivai/witness-playwright';
 
 test.describe('Component Showcase', () => {
-  let vr: testivAI;
-
-  test.beforeAll(async () => {
-    // Initialize testivAI with Playwright plugin
-    vr = testivAI.init({
-      framework: 'playwright',
-      baselineDir: './.testivai/visual-regression/baseline',
-      compareDir: './.testivai/visual-regression/compare',
-      diffThreshold: 0.1
-    }).use(playwrightPlugin());
-  });
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -101,48 +90,38 @@ test.describe('Component Showcase', () => {
     await primaryButton.click();
   });
 
-  test('visual regression - full page screenshot', async ({ page }) => {
+  test('visual regression - full page screenshot', async ({ page }, testInfo) => {
     // Wait for all images to load
     await page.waitForLoadState('networkidle');
     
     // Take full page screenshot for visual regression
-    await vr.capture('component-showcase-full-page', page, {
-      fullPage: true
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-full-page');
   });
 
-  test('visual regression - header section', async ({ page }) => {
+  test('visual regression - header section', async ({ page }, testInfo) => {
     // Take screenshot of header section
-    await vr.capture('component-showcase-header', page, {
-      selector: '.app-header'
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-header');
   });
 
-  test('visual regression - alert components', async ({ page }) => {
+  test('visual regression - alert components', async ({ page }, testInfo) => {
     // Take screenshot of alerts section
-    await vr.capture('component-showcase-alerts', page, {
-      selector: '.alerts-container'
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-alerts');
   });
 
-  test('visual regression - button components', async ({ page }) => {
+  test('visual regression - button components', async ({ page }, testInfo) => {
     // Take screenshot of buttons section
-    await vr.capture('component-showcase-buttons', page, {
-      selector: '.buttons-container'
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-buttons');
   });
 
-  test('visual regression - card components', async ({ page }) => {
+  test('visual regression - card components', async ({ page }, testInfo) => {
     // Wait for all card images to load
     await page.waitForLoadState('networkidle');
     
     // Take screenshot of cards section
-    await vr.capture('component-showcase-cards', page, {
-      selector: '.cards-container'
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-cards');
   });
 
-  test('responsive design - mobile viewport', async ({ page }) => {
+  test('responsive design - mobile viewport', async ({ page }, testInfo) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     
@@ -156,12 +135,10 @@ test.describe('Component Showcase', () => {
     await expect(page.locator('.card')).toHaveCount(3);
     
     // Take mobile screenshot for visual regression
-    await vr.capture('component-showcase-mobile', page, {
-      fullPage: true
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-mobile');
   });
 
-  test('responsive design - tablet viewport', async ({ page }) => {
+  test('responsive design - tablet viewport', async ({ page }, testInfo) => {
     // Set tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
     
@@ -169,8 +146,6 @@ test.describe('Component Showcase', () => {
     await page.waitForTimeout(500);
     
     // Take tablet screenshot for visual regression
-    await vr.capture('component-showcase-tablet', page, {
-      fullPage: true
-    });
+    await testivai.witness(page, testInfo, 'component-showcase-tablet');
   });
 });
