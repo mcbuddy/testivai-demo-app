@@ -1,0 +1,22 @@
+{
+  "name": "testivai-webdriverio-example",
+  "version": "1.0.0",
+  "description": "WebdriverIO example with TestivAI CDP",
+  "scripts": {
+    "test": "wdio run wdio.conf.js",
+    "test:headed": "wdio run wdio.conf.js --headless=false"
+  },
+  "devDependencies": {
+    "@wdio/cli": "^8.0.0",
+    "@wdio/local-runner": "^8.0.0",
+    "@wdio/mocha-framework": "^8.0.0",
+    "@wdio/spec-reporter": "^8.0.0",
+    "chai": "^4.3.7",
+    "chromedriver": "^145.0.0",
+    "dotenv": "^17.3.1",
+    "wdio-chromedriver-service": "^8.1.1"
+  },
+  "dependencies": {
+    "@testivai/witness-cdp": "^0.3.5"
+  }
+}
