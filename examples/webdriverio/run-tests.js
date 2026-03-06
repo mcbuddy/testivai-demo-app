@@ -18,7 +18,8 @@ class TestRunner extends EventEmitter {
       // Start the dev server from the root directory
       this.devServer = spawn('npm', ['run', 'dev'], {
         cwd: path.resolve(__dirname, '../..'),
-        stdio: ['pipe', 'pipe', 'pipe']
+        stdio: ['pipe', 'pipe', 'pipe'],
+        detached: true  // Create a new process group
       });
 
       let output = '';
@@ -99,13 +100,23 @@ class TestRunner extends EventEmitter {
     if (this.devServer) {
       console.log('\n🛑 Stopping dev server...');
       
-      // Try to stop gracefully
-      this.devServer.kill('SIGTERM');
+      // Kill the entire process group to ensure all child processes die
+      try {
+        // On macOS/Linux, kill the process group
+        process.kill(-this.devServer.pid, 'SIGTERM');
+      } catch (e) {
+        // Fallback to killing just the process
+        this.devServer.kill('SIGTERM');
+      }
       
       // Force kill after 5 seconds
       setTimeout(() => {
         if (this.devServer && !this.devServer.killed) {
-          this.devServer.kill('SIGKILL');
+          try {
+            process.kill(-this.devServer.pid, 'SIGKILL');
+          } catch (e) {
+            this.devServer.kill('SIGKILL');
+          }
         }
       }, 5000);
       
@@ -115,25 +126,93 @@ class TestRunner extends EventEmitter {
           console.log('✅ Dev server stopped');
           resolve();
         });
+        
+        // Don't wait forever
+        setTimeout(() => {
+          console.log('⚠️  Dev server did not exit gracefully');
+          resolve();
+        }, 3000);
       });
     }
   }
 
   async cleanup() {
-    // Kill any remaining Vite processes on common ports
-    const ports = ['5173', '5174', '5175'];
+    console.log('\n🧹 Cleaning up existing processes...');
+    
+    const promises = [];
+    
+    // Kill any Vite processes on common ports
+    const ports = ['5173', '5174', '5175', '5176', '5177', '5178', '5179', '5180'];
     for (const port of ports) {
+      const promise = new Promise((resolve) => {
+        try {
+          const lsof = spawn('lsof', ['-ti', `:${port}`]);
+          let pids = '';
+          
+          lsof.stdout.on('data', (data) => {
+            pids += data.toString();
+          });
+          
+          lsof.on('close', (code) => {
+            if (code === 0 && pids.trim()) {
+              const pidList = pids.trim().split('\n');
+              pidList.forEach(pid => {
+                if (pid) {
+                  try {
+                    process.kill(pid, 'SIGTERM');
+                    console.log(`  Killed process ${pid} on port ${port}`);
+                  } catch (e) {
+                    // Process might already be dead
+                  }
+                }
+              });
+            }
+            resolve();
+          });
+        } catch (e) {
+          resolve();
+        }
+      });
+      promises.push(promise);
+    }
+    
+    // Also kill any npm processes running vite
+    const vitePromise = new Promise((resolve) => {
       try {
-        const lsof = spawn('lsof', ['-ti', `:${port}`]);
-        lsof.on('exit', (code) => {
-          if (code === 0) {
-            spawn('kill', ['-9', lsof.stdout.toString().trim()]);
+        const pgrep = spawn('pgrep', ['-f', 'vite']);
+        let pids = '';
+        
+        pgrep.stdout.on('data', (data) => {
+          pids += data.toString();
+        });
+        
+        pgrep.on('close', (code) => {
+          if (code === 0 && pids.trim()) {
+            const pidList = pids.trim().split('\n');
+            pidList.forEach(pid => {
+              if (pid) {
+                try {
+                  process.kill(pid, 'SIGTERM');
+                  console.log(`  Killed vite process ${pid}`);
+                } catch (e) {
+                  // Process might already be dead
+                }
+              }
+            });
           }
+          resolve();
         });
       } catch (e) {
-        // Ignore errors
+        resolve();
       }
-    }
+    });
+    promises.push(vitePromise);
+    
+    // Wait for all cleanup operations to complete
+    await Promise.all(promises);
+    
+    // Wait a moment for processes to die
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
   async run() {
