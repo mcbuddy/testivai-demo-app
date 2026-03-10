@@ -14,6 +14,7 @@
   outline: none;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   min-width: 140px;
+  font-family: 'Georgia', 'Times New Roman', serif;
 }
 
 .button:focus {
@@ -29,16 +30,16 @@
 
 /* Primary variant */
 .button--primary {
-  background-color: #3b82f6;
+  background-color: #dc2626;
   color: white;
 }
 
 .button--primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #b91c1c;
 }
 
 .button--primary:active:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: #991b1b;
 }
 
 /* Secondary variant */
