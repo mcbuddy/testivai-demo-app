@@ -19,6 +19,6 @@
     "wdio-chromedriver-service": "^8.1.1"
   },
   "dependencies": {
-    "@testivai/witness-cdp": "^0.3.5"
+    "@testivai/witness-cdp": "^0.3.17"
   }
 }
