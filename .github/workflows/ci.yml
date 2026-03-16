@@ -1,3 +1,4 @@
+# GitHub Actions workflow - Note: Some IDEs may show false positive lint errors for actions, but the workflow is valid and will run correctly
 name: CI Tests
 
 on:
@@ -31,6 +32,8 @@ jobs:
         
       - name: Run Playwright tests
         run: npm run test
+        env:
+          TESTIVAI_API_KEY: ${{ secrets.TESTIVAI_API_KEY }}
         
       - name: Upload test results
         uses: actions/upload-artifact@v4
