@@ -18,52 +18,38 @@ All examples use the **TestivAI Framework-Agnostic CDP SDK** - no language-speci
 
 3. Run any framework with TestivAI:
    ```bash
-   npx testivai run "cd examples/webdriverio && npm test"
+   cd examples/javascript/webdriverio
+   ./run_testivai_webdriverio.sh
    ```
 
 ## 📁 Directory Structure
 
 ```
 examples/
-├── playwright/           # Playwright (TypeScript)
-│   ├── component-showcase.spec.ts
-│   └── README.md
-├── webdriverio/          # WebdriverIO (JavaScript)
-│   ├── component-showcase.test.js
-│   ├── wdio.conf.js
-│   └── package.json
-├── selenium-python/      # Selenium (Python)
-│   ├── component_showcase_test.py
-│   ├── requirements.txt
-│   └── pytest.ini
-├── cypress/             # Cypress (JavaScript)
-│   ├── e2e/component-showcase.cy.js
-│   ├── cypress.config.js
-│   ├── support/e2e.js
-│   └── package.json
-├── rspec-capybara/      # RSpec/Capybara (Ruby)
-│   ├── spec/component_showcase_spec.rb
-│   ├── spec/spec_helper.rb
-│   ├── Gemfile
-│   └── .rspec
-├── selenium-java/       # Selenium Java (TestNG)
-│   ├── src/test/java/com/testivai/ComponentShowcaseTest.java
-│   ├── src/test/java/com/testivai/BaseTest.java
-│   ├── pom.xml
-│   └── testng.xml
-└── cucumber-java/       # Cucumber Java (BDD)
-    ├── src/test/resources/features/component-showcase.feature
-    ├── src/test/java/com/testivai/ComponentShowcaseStepDefs.java
-    ├── src/test/java/com/testivai/Hooks.java
-    ├── src/test/java/com/testivai/TestRunner.java
-    └── pom.xml
+├── javascript/           # JavaScript examples
+│   ├── cypress/          # Cypress with TestivAI
+│   ├── webdriverio/      # WebdriverIO with TestivAI
+│   ├── playwright/       # Playwright with TestivAI
+│   ├── selenium/         # Selenium JavaScript + Jest
+│   └── puppeteer/        # Puppeteer with Jest
+├── python/               # Python examples
+│   ├── selenium-pytest/  # Selenium + pytest
+│   ├── selenium-unittest/ # Selenium + unittest
+│   └── robot-framework/  # Robot Framework
+├── java/                 # Java examples
+│   ├── selenium-junit5/  # Selenium + JUnit 5
+│   ├── selenium-testng/  # Selenium + TestNG
+│   └── cucumber-java/    # Cucumber Java (BDD)
+└── ruby/                 # Ruby examples
+    ├── rspec-capybara/   # RSpec + Capybara
+    └── cucumber-capybara/ # Cucumber Ruby (BDD)
 ```
 
 ## Prerequisites
 
-1. Install the TestivAI CDP SDK in the root project:
+1. Install the TestivAI CDP SDK globally:
    ```bash
-   npm install @testivai/witness-cdp
+   npm install -g @testivai/witness-cdp
    ```
 
 2. Set your TestivAI API key as an environment variable:
@@ -76,203 +62,105 @@ examples/
    npm run dev
    ```
 
-## Playwright Example
+## JavaScript Examples
 
-### Setup
+### Cypress
 ```bash
-# Playwright tests are already configured in the root project
-# Dependencies are already installed
-```
-
-### Run Tests
-```bash
-# From root directory
-npm run test:playwright
-
-# Or directly with Playwright
-npx playwright test examples/playwright
-
-# UI mode
-npm run test:ui
-
-# Headed mode
-npm run test:headed
-```
-
-### Key Features
-- Original implementation using TypeScript
-- Native TestivAI Playwright SDK integration
-- Full visual regression testing suite
-- Parallel test execution
-- Built-in waiting mechanisms
-
-## WebdriverIO Example
-
-### Setup
-```bash
-cd examples/webdriverio
+cd examples/javascript/cypress
 npm install
+./run_testivai_cypress.sh
 ```
 
-### Run Tests
+### WebdriverIO
 ```bash
-# Headless mode
-npm test
-
-# Headed mode (visible browser)
-npm run test:headed
+cd examples/javascript/webdriverio
+npm install
+./run_testivai_webdriverio.sh
+# OR use the original: node run-tests.js
 ```
 
-### Key Features
-- Uses Mocha assertion library with Chai
-- Implements all visual regression tests from the original Playwright suite
-- Supports responsive testing (mobile and tablet viewports)
-- Full page and component-specific screenshots
-
-## Selenium Python Example
-
-### Setup
+### Playwright
 ```bash
-cd examples/selenium-python
+cd examples/javascript/playwright
+npm install
+./run_testivai_playwright.sh
+```
+
+### Selenium JavaScript
+```bash
+cd examples/javascript/selenium
+npm install
+./run_testivai_selenium_js.sh
+```
+
+### Puppeteer
+```bash
+cd examples/javascript/puppeteer
+npm install
+./run_testivai_puppeteer.sh
+```
+
+## Python Examples
+
+### Selenium + pytest
+```bash
+cd examples/python/selenium-pytest
 pip install -r requirements.txt
+./run_testivai_python_pytest.sh
 ```
 
-### Run Tests
+### Selenium + unittest
 ```bash
-pytest
+cd examples/python/selenium-unittest
+pip install -r requirements.txt
+./run_testivai_python_unittest.sh
 ```
 
-### Key Features
-- Uses pytest framework
-- Implements all visual regression tests
-- Automatic Chrome driver management
-- Setup and teardown with fixtures
-- Window size manipulation for responsive testing
-
-## Cypress Example
-
-### Setup
+### Robot Framework
 ```bash
-cd examples/cypress
-npm install
+cd examples/python/robot-framework
+pip install -r requirements.txt
+./run_testivai_robot_framework.sh
 ```
 
-### Run Tests
+## Java Examples
+
+### Selenium + JUnit 5
 ```bash
-# Headless mode
-npm test
-
-# Interactive mode
-npm run test:open
-
-# Headed mode (visible browser)
-npm run test:headed
+cd examples/java/selenium-junit5
+mvn clean install
+./run_testivai_java_junit5.sh
 ```
 
-### Key Features
-- Modern JavaScript testing framework
-- Built-in waiting mechanisms
-- Time-travel debugging capability
-- Automatic retries and flaky test handling
-- Visual regression testing with TestivAI CDP integration
-
-## RSpec/Capybara Example
-
-### Setup
+### Selenium + TestNG
 ```bash
-cd examples/rspec-capybara
+cd examples/java/selenium-testng
+mvn clean install
+./run_testivai_java_testng.sh
+```
+
+### Cucumber Java
+```bash
+cd examples/java/cucumber-java
+mvn clean install
+./run_testivai_java_cucumber.sh
+```
+
+## Ruby Examples
+
+### RSpec + Capybara
+```bash
+cd examples/ruby/rspec-capybara
 bundle install
+./run_testivai_ruby_rspec.sh
 ```
 
-### Run Tests
+### Cucumber + Capybara
 ```bash
-# Headless mode (default)
-bundle exec rspec
-
-# Headed mode
-HEADLESS=false bundle exec rspec
-
-# Specific test file
-bundle exec rspec spec/component_showcase_spec.rb
+cd examples/ruby/cucumber-capybara
+bundle install
+./run_testivai_ruby_cucumber.sh
 ```
-
-### Configuration
-- `.rspec` - RSpec configuration
-- `spec/spec_helper.rb` - Capybara and TestivAI CDP setup
-- `Gemfile` - Ruby dependencies
-
-### Key Features
-- Ruby testing with RSpec and Capybara
-- Built-in matchers for DOM assertions
-- Automatic driver management with webdrivers gem
-- TestivAI CDP integration for visual regression
-
-## Selenium Java Example
-
-### Setup
-```bash
-cd examples/selenium-java
-mvn clean install
-```
-
-### Run Tests
-```bash
-# Run all tests
-mvn test
-
-# Run with headed browser
-mvn test -Dheadless=false
-
-# Run specific test
-mvn test -Dtest=ComponentShowcaseTest#testDisplayComponentShowcasePage
-
-# Run with TestNG XML
-mvn test -DsuiteFile=testng.xml
-```
-
-### Configuration
-- `pom.xml` - Maven dependencies and plugins
-- `testng.xml` - TestNG suite configuration
-- `BaseTest.java` - WebDriver and TestivAI CDP setup
-- System properties for API key and build name
-
-### Key Features
-- Java testing with TestNG framework
-- WebDriverManager for automatic driver management
-- AssertJ for fluent assertions
-- TestivAI CDP Java SDK integration
-
-## Cucumber Java Example
-
-### Setup
-```bash
-cd examples/cucumber-java
-mvn clean install
-```
-
-### Run Tests
-```bash
-# Run all features
-mvn test
-
-# Run with headed browser
-mvn test -Dheadless=false
-
-# Run specific feature
-mvn test -Dcucumber.options="--name 'Display the component showcase page'"
-```
-
-### Configuration
-- `pom.xml` - Maven dependencies with Cucumber
-- `TestRunner.java` - Cucumber TestNG runner
-- `Hooks.java` - Setup and teardown methods
-- `.feature` files - Gherkin scenarios
-
-### Key Features
-- BDD testing with Cucumber and Gherkin
-- Step definitions for reusable test logic
-- TestNG integration for parallel execution
-- Visual regression testing with TestivAI CDP
 
 ## Test Coverage
 
@@ -304,15 +192,15 @@ All framework implementations include the following test cases:
 
 ## Framework Comparison
 
-| Feature | Playwright | WebdriverIO | Selenium Python | Cypress | RSpec/Capybara | Selenium Java | Cucumber Java |
-|---------|------------|-------------|-----------------|---------|----------------|---------------|---------------|
-| Language | TypeScript/JS | JavaScript | Python | JavaScript | Ruby | Java | Java |
-| Setup Time | Fast | Medium | Medium | Fast | Medium | Medium | Medium |
-| Auto-Waits | ✅ | ⚠️ | ⚠️ | ✅ | ⚠️ | ⚠️ | ⚠️ |
-| Parallel Execution | ✅ | ✅ | ⚠️ | ⚠️ | ✅ | ✅ | ✅ |
-| Visual Regression | Native | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK |
-| Debugging | Excellent | Good | Good | Excellent | Good | Good | Good |
-| BDD Support | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ✅ |
+| Feature | Cypress | WebDriverIO | Playwright | Selenium JS | Puppeteer | Python pytest | Python unittest | Robot | Java JUnit 5 | Java TestNG | Java Cucumber | Ruby RSpec | Ruby Cucumber |
+|---------|---------|-------------|------------|-------------|-----------|---------------|-----------------|-------|--------------|-------------|---------------|------------|---------------|
+| Language | JavaScript | JavaScript | TypeScript | JavaScript | JavaScript | Python | Python | Python | Java | Java | Java | Ruby | Ruby |
+| Setup Time | Fast | Medium | Fast | Medium | Medium | Medium | Medium | Medium | Medium | Medium | Medium | Medium | Medium |
+| Auto-Waits | ✅ | ⚠️ | ✅ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ |
+| Parallel Execution | ⚠️ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Visual Regression | CDP SDK | CDP SDK | Native | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK | CDP SDK |
+| Debugging | Excellent | Good | Excellent | Good | Good | Good | Good | Good | Good | Good | Good | Good | Good |
+| BDD Support | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ✅ | ⚠️ | ✅ |
 
 ## Running Tests in CI
 
@@ -327,12 +215,23 @@ Example GitHub Actions workflow:
 ```yaml
 - name: Run WebdriverIO Tests
   run: |
-    cd examples/webdriverio
+    cd examples/javascript/webdriverio
     npm install
-    npm test
+    ./run_testivai_webdriverio.sh
   env:
     TESTIVAI_API_KEY: ${{ secrets.TESTIVAI_API_KEY }}
 ```
+
+## How It Works
+
+The TestivAI CDP SDK injects a `window.testivaiWitness()` function into Chrome via the remote debugging protocol (port 9222). Each framework's helper file wraps this call in a framework-idiomatic way:
+
+- **JavaScript frameworks** - executeScript / evaluate wrapper
+- **Python** - driver.execute_script() wrapper
+- **Java** - JavascriptExecutor wrapper
+- **Ruby** - execute_script wrapper
+- **Cypress** - native cy.window().invoke() custom command
+- **Robot Framework** - Execute Javascript keyword wrapper
 
 ## Troubleshooting
 
@@ -346,13 +245,17 @@ Example GitHub Actions workflow:
 ### Debug Mode
 
 Most frameworks support a headed mode for debugging:
-- Playwright: `npm run test:headed` or `npm run test:ui`
-- WebdriverIO: `npm run test:headed`
 - Cypress: `npm run test:open` or `npm run test:headed`
-- Selenium Python: Remove `--headless` option from Chrome options
-- RSpec/Capybara: `HEADLESS=false bundle exec rspec`
-- Selenium Java: `mvn test -Dheadless=false`
-- Cucumber Java: `mvn test -Dheadless=false`
+- WebdriverIO: `npm run test:headed`
+- Playwright: `npm run test:headed` or `npm run test:ui`
+- Selenium JavaScript: Remove `--headless` option from Chrome options
+- Puppeteer: Remove `--headless` option from Chrome options
+- Python pytest: Remove `--headless` option from Chrome options
+- Python unittest: Remove `--headless` option from Chrome options
+- Robot Framework: Remove `--headless` option from Chrome options
+- Java: Run with `-Dheadless=false`
+- Ruby RSpec: `HEADLESS=false bundle exec rspec`
+- Ruby Cucumber: `HEADLESS=false bundle exec cucumber`
 
 ## Next Steps
 
