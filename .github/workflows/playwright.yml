@@ -1,3 +1,5 @@
+# Playwright Tests Workflow
+# Note: Some IDEs may show false positive lint errors for actions, but the workflow is valid and will run correctly in GitHub Actions
 name: Playwright Tests
 
 on:
