@@ -51,4 +51,12 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+
+  /* Run your local dev server before starting the tests */
+  webServer: {
+    command: 'cd ../../.. && npm run dev',
+    url: `http://localhost:${process.env.TEST_SERVER_PORT || 5174}`,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });

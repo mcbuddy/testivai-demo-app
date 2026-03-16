@@ -48,7 +48,7 @@ jobs:
       - name: Run Playwright tests
         run: npm test
         env:
-          TEST_SERVER_PORT: 5173
+          TEST_SERVER_PORT: 5174
           TESTIVAI_API_KEY: ${{ secrets.TESTIVAI_API_KEY }}
         
       - name: Upload test results
