@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { testivai } from '@testivai/witness-playwright';
 
 // Get the dynamic port from environment variable
-const baseUrl = `http://localhost:${process.env.TEST_SERVER_PORT || 5174}`;
+const baseUrl = `http://localhost:${process.env.TEST_SERVER_PORT || 5173}`;
 
 test.describe('Component Showcase - Playwright', () => {
   test.beforeEach(async ({ page }) => {
