@@ -56,7 +56,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: `http://localhost:${process.env.TEST_SERVER_PORT || 5173}`,
-    port: parseInt(process.env.TEST_SERVER_PORT || 5173),
     cwd: '../../..',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
