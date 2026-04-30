@@ -1,0 +1,77 @@
+# Playwright Tests Workflow
+# Note: Some IDEs may show false positive lint errors for actions, but the workflow is valid and will run correctly in GitHub Actions
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'examples/javascript/playwright/**'
+      - '.github/workflows/playwright.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'examples/javascript/playwright/**'
+      - '.github/workflows/playwright.yml'
+
+jobs:
+  playwright-tests:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: examples/javascript/playwright
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: examples/javascript/playwright/package-lock.json
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        
+      - name: Install root dependencies (for app build)
+        run: cd ../../.. && npm ci
+        
+      - name: Build application
+        run: cd ../../.. && npm run build
+        
+      - name: Run Playwright tests
+        run: npm test
+        env:
+          TEST_SERVER_PORT: 5173
+          TESTIVAI_API_KEY: ${{ secrets.TESTIVAI_API_KEY }}
+        
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: examples/javascript/playwright/playwright-report/
+          retention-days: 30
+          
+      - name: Check for visual regression artifacts
+        id: check-testivai
+        run: |
+          if [ -d ".testivai" ] && [ "$(find .testivai -type f | wc -l)" -gt 0 ]; then
+            echo "artifacts-exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "artifacts-exist=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Upload visual regression artifacts
+        uses: actions/upload-artifact@v4
+        if: always() && steps.check-testivai.outputs.artifacts-exist == 'true'
+        with:
+          name: visual-regression-results
+          path: examples/javascript/playwright/.testivai/
+          retention-days: 30

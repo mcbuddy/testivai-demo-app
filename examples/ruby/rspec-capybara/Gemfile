@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'rspec', '~> 3.12'
+gem 'capybara', '~> 3.40'
+gem 'selenium-webdriver', '~> 4.16'
+gem 'webdrivers', '~> 5.3'
+
+group :development, :test do
+  gem 'pry'
+end

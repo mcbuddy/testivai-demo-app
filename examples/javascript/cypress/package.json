@@ -1,0 +1,13 @@
+{
+  "name": "testivai-cypress-example",
+  "version": "1.0.0",
+  "description": "Cypress example with TestivAI CDP",
+  "scripts": {
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:headed": "cypress run --headed"
+  },
+  "devDependencies": {
+    "cypress": "^13.6.0"
+  }
+}

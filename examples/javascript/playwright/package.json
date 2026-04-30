@@ -1,0 +1,25 @@
+{
+  "name": "@testivai-demo/playwright-example",
+  "version": "1.0.0",
+  "description": "Playwright example for TestivAI visual regression testing",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed"
+  },
+  "keywords": [
+    "playwright",
+    "testivai",
+    "visual-regression",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@testivai/witness-playwright": "^0.3.3",
+    "dotenv": "^17.3.1"
+  }
+}
