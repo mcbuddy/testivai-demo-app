@@ -1,0 +1,89 @@
+name: OSS Visual Regression
+
+# Runs the TestivAI OSS lane: local-mode visual regression with no API key.
+#
+# Flow:
+#   1. Install @testivai/witness-playwright (published npm package)
+#   2. Run tests — compares screenshots against committed baselines in
+#      .testivai/baselines/; generates visual-report/ with results.json + index.html
+#   3. Upload the report as a workflow artifact (download from Actions tab)
+#   4. Use mcbuddy/testivai-oss@v1 to post a PR comment and set commit status
+#
+# Baselines are committed to the repo under .testivai/baselines/.
+# To approve changed/new baselines locally after reviewing the report:
+#
+#   node -e "
+#     const {BaselineStore} = require('@testivai/witness/baselines');
+#     const s = new BaselineStore(process.cwd());
+#     s.listTemp().forEach(n => s.approve(n));
+#   "
+# Then commit and push the updated baselines.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests-oss/**'
+      - 'playwright.oss.config.ts'
+      - '.testivai/baselines/**'
+      - '.testivai/config.json'
+      - '.github/workflows/playwright-oss.yml'
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: oss-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oss-visual:
+    name: Visual Regression (OSS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run OSS visual regression tests
+        run: npm run test:oss
+        env:
+          TEST_SERVER_PORT: 5173
+        # Start the preview server on CI instead of vite dev server
+        # The webServer in playwright.oss.config.ts handles this via `npm run dev`
+        # but we override with pre-built preview for faster/stable CI
+        # (remove TEST_SERVER_PORT above and uncomment below if you prefer dev server)
+        # run: npx vite preview --port 5173 &
+        # sleep 3 && npm run test:oss
+
+      - name: Upload visual report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-report-${{ github.run_number }}
+          path: visual-report/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Post visual diff results to PR
+        uses: mcbuddy/testivai-oss@v1
+        if: always()
+        with:
+          results-path: visual-report/results.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}

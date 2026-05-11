@@ -27,18 +27,18 @@
   cursor: not-allowed;
 }
 
-/* Primary variant */
+/* Primary variant — aligned with header gradient (indigo) */
 .button--primary {
-  background-color: #3b82f6;
+  background-color: #4f46e5;
   color: white;
 }
 
 .button--primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #4338ca;
 }
 
 .button--primary:active:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: #3730a3;
 }
 
 /* Secondary variant */
