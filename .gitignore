@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# TestivAI OSS — track baselines + config; ignore transient outputs
+.testivai/temp/
+visual-report/
+test-results/
+playwright-report/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

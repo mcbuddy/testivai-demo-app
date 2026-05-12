@@ -1,0 +1,82 @@
+name: OSS Visual Regression
+
+# Runs the TestivAI OSS lane: local-mode visual regression with no API key.
+#
+# Flow:
+#   1. Install @testivai/witness-playwright (published npm package)
+#   2. Run tests — compares screenshots against committed baselines in
+#      .testivai/baselines/; generates visual-report/ with results.json + index.html
+#   3. Upload the report as a workflow artifact (download from Actions tab)
+#   4. Use mcbuddy/testivai-oss@v1 to post a PR comment and set commit status
+#
+# Baselines are committed to the repo under .testivai/baselines/.
+# To approve changed/new baselines locally after reviewing the report:
+#
+#   node -e "
+#     const {BaselineStore} = require('@testivai/witness/baselines');
+#     const s = new BaselineStore(process.cwd());
+#     s.listTemp().forEach(n => s.approve(n));
+#   "
+# Then commit and push the updated baselines.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests-oss/**'
+      - 'playwright.oss.config.ts'
+      - '.testivai/baselines/**'
+      - '.testivai/config.json'
+      - '.github/workflows/playwright-oss.yml'
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: oss-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write  # post diff comment on PRs
+  statuses: write       # set commit status (pass/fail indicator on the PR)
+
+jobs:
+  oss-visual:
+    name: Visual Regression (OSS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run OSS visual regression tests
+        # playwright.oss.config.ts starts the dev server automatically via webServer.
+        # Build is still done above so the dev server starts fast and we don't rely
+        # on hot-module reload timing in CI.
+        run: npm run test:oss
+
+      - name: Post visual diff results + upload report
+        uses: mcbuddy/testivai-oss@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          report-dir: visual-report
+          upload-artifact: true
+          artifact-retention-days: 30

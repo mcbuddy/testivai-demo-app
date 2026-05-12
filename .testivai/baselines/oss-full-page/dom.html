@@ -1,0 +1,550 @@
+<html lang="en"><head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/vite.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestivAI Demo App - Updated 02/10`</title>
+    <style>
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #333;
+      }
+      .button-container {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+      .button-container button {
+        transform: translateX(12px) translateY(-3px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+        border-radius: 8px;
+        padding: 0.5rem 1.2rem;
+      }
+      .button-container button:nth-child(even) {
+        transform: translateX(-12px) translateY(3px);
+      }
+      .button-container button:nth-child(3n) {
+        transform: translateX(0) translateY(-6px);
+      }
+      .button-container button:hover {
+        transform: translateX(0) translateY(0) scale(1.02);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.18);
+      }
+    </style>
+  <style type="text/css" data-vite-dev-id="/Users/budisugianto/code/testivai/testivai-demo-app/src/index.css">:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/budisugianto/code/testivai/testivai-demo-app/src/App.css">/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+/* App container */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid #fbbf24;
+}
+
+.app-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.app-header p {
+  margin: 0;
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.header-badge {
+  margin-top: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: #1f2937;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Main content */
+.app-main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+/* Component sections */
+.component-section {
+  margin-bottom: 4rem;
+}
+
+.component-section:last-child {
+  margin-bottom: 2rem;
+}
+
+.component-section h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+/* Alerts container */
+.alerts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+}
+
+/* Buttons container */
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+/* Cards container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* TestivAI section */
+.testivai-info {
+  max-width: 800px;
+}
+
+.testivai-features {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  border: 1px solid #0ea5e9;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.testivai-features h3 {
+  margin: 0 0 1rem 0;
+  color: #0c4a6e;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.testivai-features ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.testivai-features li {
+  margin-bottom: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.testivai-features code {
+  background-color: #1f2937;
+  color: #fbbf24;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* Footer */
+.app-footer {
+  background-color: #374151;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 2rem 1rem;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .app-header p {
+    font-size: 1rem;
+  }
+  
+  .app-main {
+    padding: 2rem 1rem;
+  }
+  
+  .component-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .buttons-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .app-footer {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .component-section h2 {
+    font-size: 1.25rem;
+  }
+  
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+</style><style type="text/css" data-vite-dev-id="/Users/budisugianto/code/testivai/testivai-demo-app/src/components/Button/Button.css">.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  min-width: 140px;
+}
+
+.button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary variant */
+.button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.button--primary:active:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* Secondary variant */
+.button--secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.button--secondary:active:not(:disabled) {
+  background-color: #d1d5db;
+  border-color: #6b7280;
+}
+</style><style type="text/css" data-vite-dev-id="/Users/budisugianto/code/testivai/testivai-demo-app/src/components/Card/Card.css">.card {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-in-out;
+  max-width: 100%;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card__image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover .card__image {
+  transform: scale(1.05);
+}
+
+.card__content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.card__text {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .card__image-container {
+    height: 160px;
+  }
+  
+  .card__content {
+    padding: 1rem;
+  }
+  
+  .card__title {
+    font-size: 1.125rem;
+  }
+  
+  .card__text {
+    font-size: 0.875rem;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/budisugianto/code/testivai/testivai-demo-app/src/components/Alert/Alert.css">.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.alert:last-child {
+  margin-bottom: 0;
+}
+
+/* Success variant */
+.alert--success {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.alert--success::before {
+  content: "✓";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #16a34a;
+}
+
+/* Error variant */
+.alert--error {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.alert--error::before {
+  content: "✕";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #dc2626;
+}
+
+/* Focus styles for accessibility */
+.alert:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .alert {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+  }
+}
+</style></head>
+  <body>
+    <div id="root"><div class="app"><header class="app-header"><h1>🎨 Component Showcase</h1><p>A collection of reusable React components - Now with TestivAI Visual Regression Testing!</p><div class="header-badge"><span class="badge">✨ Updated with TestivAI Witness v0.1.19</span></div></header><main class="app-main"><section class="component-section"><h2>Alert Components</h2><div class="alerts-container"><div class="alert alert--success" role="alert">Your changes have been saved successfully!</div><div class="alert alert--error" role="alert">There was an error processing your request. Please try again.</div></div></section><section class="component-section"><h2>Button Components</h2><div class="buttons-container"><button class="button button--primary">Primary Button</button><button class="button button--secondary">Secondary Button</button><button class="button button--primary" disabled="">Disabled Button</button><button class="button button--secondary">Button with Longer Text</button></div></section><section class="component-section"><h2>Card Components</h2><div class="cards-container"><div class="card"><div class="card__image-container"><img alt="Beautiful mountain landscape with lake reflection" class="card__image" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&amp;h=300&amp;fit=crop"></div><div class="card__content"><h3 class="card__title">Beautiful Landscape</h3><p class="card__text">Discover breathtaking views and natural wonders in this stunning landscape photography collection. Perfect for nature enthusiasts and photography lovers.</p></div></div><div class="card"><div class="card__image-container"><img alt="Modern glass building with geometric design" class="card__image" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&amp;h=300&amp;fit=crop"></div><div class="card__content"><h3 class="card__title">Modern Architecture</h3><p class="card__text">Explore contemporary architectural designs that blend form and function. These innovative structures represent the future of urban development.</p></div></div><div class="card"><div class="card__image-container"><img alt="Abstract technology and innovation concept" class="card__image" src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&amp;h=300&amp;fit=crop"></div><div class="card__content"><h3 class="card__title">Technology Innovation</h3><p class="card__text">Stay ahead of the curve with the latest technological innovations. From AI to sustainable energy, discover what's shaping our future.</p></div></div></div></section><section class="component-section"><h2>🧪 TestivAI Visual Regression Testing</h2><div class="testivai-info"><div class="alert alert--success" role="alert">This application now includes automated visual regression testing with TestivAI!</div><div class="testivai-features"><h3>Features Included:</h3><ul><li>✅ Automated screenshot comparison</li><li>✅ GitHub Actions integration</li><li>✅ PR comment approvals with <code>/approve-visuals</code></li><li>✅ Responsive design testing</li><li>✅ Component-level visual testing</li></ul></div></div></section></main><footer class="app-footer"><p>Built with React, TypeScript, Vite, and TestivAI Visual Regression Testing</p></footer></div></div>
+    <script type="module" src="/src/main.tsx"></script>
+  
+
+</body></html>
