@@ -1,3 +1,14 @@
+/**
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  CLOUD LANE CONFIG  —  testivai.config.ts                                │
+ * ├──────────────────────────────────────────────────────────────────────────┤
+ * │  This file configures the cloud comparison engine (REVEAL AI).           │
+ * │  It is read by playwright.config.ts / the cloud lane only.               │
+ * │                                                                          │
+ * │  The OSS lane (playwright.oss.config.ts) uses .testivai/config.json      │
+ * │  instead — see that file for OSS-specific settings (threshold, mode).    │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ */
 export default {
   layout: {
     sensitivity: 2, // 0-4 scale (0=strict, 4=lenient)
