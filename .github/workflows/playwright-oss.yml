@@ -36,6 +36,10 @@ concurrency:
   group: oss-visual-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write  # required for PR comment posting
+
 jobs:
   oss-visual:
     name: Visual Regression (OSS)
@@ -62,28 +66,16 @@ jobs:
         run: npm run build
 
       - name: Run OSS visual regression tests
+        # playwright.oss.config.ts starts the dev server automatically via webServer.
+        # Build is still done above so the dev server starts fast and we don't rely
+        # on hot-module reload timing in CI.
         run: npm run test:oss
-        env:
-          TEST_SERVER_PORT: 5173
-        # Start the preview server on CI instead of vite dev server
-        # The webServer in playwright.oss.config.ts handles this via `npm run dev`
-        # but we override with pre-built preview for faster/stable CI
-        # (remove TEST_SERVER_PORT above and uncomment below if you prefer dev server)
-        # run: npx vite preview --port 5173 &
-        # sleep 3 && npm run test:oss
 
-      - name: Upload visual report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: visual-report-${{ github.run_number }}
-          path: visual-report/
-          retention-days: 30
-          if-no-files-found: warn
-
-      - name: Post visual diff results to PR
+      - name: Post visual diff results + upload report
         uses: mcbuddy/testivai-oss@v1
         if: always()
         with:
-          results-path: visual-report/results.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          report-dir: visual-report
+          upload-artifact: true
+          artifact-retention-days: 30
