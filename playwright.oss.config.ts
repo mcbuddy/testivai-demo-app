@@ -1,15 +1,32 @@
 /**
- * OSS lane Playwright config — local visual regression, no API key required.
- *
- * Reads baselines from `.testivai/baselines/` and writes an HTML report to
- * `visual-report/` after each run. Run with:
- *
- *   npm run test:oss
- *
- * To approve new/changed baselines after review:
- *   node -e "const {BaselineStore}=require('@testivai/witness/baselines');
- *            const s=new BaselineStore(process.cwd());
- *            s.listTemp().forEach(n=>s.approve(n))"
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  OSS LANE  —  playwright.oss.config.ts                                   │
+ * ├──────────────────────────────────────────────────────────────────────────┤
+ * │  Tests: tests-oss/                                                       │
+ * │  Run:   npm run test:oss                                                 │
+ * │                                                                          │
+ * │  No API key or TestivAI account needed — runs fully offline.             │
+ * │  Baselines live in .testivai/baselines/ (committed to the repo).         │
+ * │  Report written to visual-report/index.html after every run.             │
+ * │                                                                          │
+ * │  What you get with OSS:                                                  │
+ * │    • Pixel diff  — detects any visual change                             │
+ * │    • DOM diff    — flags render noise when pixels change but DOM is same │
+ * │    • HTML report — results.json + index.html, uploadable as CI artifact  │
+ * │    • GitHub Action  mcbuddy/testivai-oss@v1 — PR comment + commit status │
+ * │                                                                          │
+ * │  To approve new/changed baselines after reviewing the report:           │
+ * │    node -e "                                                             │
+ * │      const {BaselineStore}=require('@testivai/witness/baselines');       │
+ * │      const s=new BaselineStore(process.cwd());                           │
+ * │      s.listTemp().forEach(n=>s.approve(n));                              │
+ * │    "                                                                     │
+ * │    Then commit and push the updated .testivai/baselines/ files.          │
+ * │                                                                          │
+ * │  To switch to the cloud lane instead:                                    │
+ * │    export TESTIVAI_API_KEY=<your-key>                                    │
+ * │    npm test   →  uses playwright.config.ts                               │
+ * └──────────────────────────────────────────────────────────────────────────┘
  */
 import { defineConfig, devices } from '@playwright/test';
 
