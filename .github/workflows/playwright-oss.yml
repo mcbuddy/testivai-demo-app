@@ -80,3 +80,4 @@ jobs:
           report-dir: visual-report
           upload-artifact: true
           artifact-retention-days: 30
+          embed-images: true  # uploads baseline/current/diff PNGs and embeds them in the PR comment
