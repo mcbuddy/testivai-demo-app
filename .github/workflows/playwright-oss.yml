@@ -2,12 +2,16 @@ name: OSS Visual Regression
 
 # Runs the TestivAI OSS lane: local-mode visual regression with no API key.
 #
-# Flow:
-#   1. Install @testivai/witness-playwright (published npm package)
-#   2. Run tests — compares screenshots against committed baselines in
-#      .testivai/baselines/; generates visual-report/ with results.json + index.html
-#   3. Upload the report as a workflow artifact (download from Actions tab)
-#   4. Use mcbuddy/testivai-oss@v1 to post a PR comment and set commit status
+# Two jobs:
+#
+#   oss-visual       — Runs on every PR push. Captures screenshots, diffs against
+#                      committed baselines, uploads the report artifact, and posts
+#                      a PR comment with the diff summary + commit status.
+#
+#   approve-baselines — Runs when a collaborator comments /testivai approve on the PR.
+#                      Downloads the artifact, copies approved screenshots into
+#                      .testivai/baselines/, commits them to the PR branch, and
+#                      posts a confirmation comment. CI re-runs automatically.
 #
 # Baselines are committed to the repo under .testivai/baselines/.
 # To approve changed/new baselines locally after reviewing the report:
@@ -31,19 +35,24 @@ on:
       - '.github/workflows/playwright-oss.yml'
   pull_request:
     branches: [main]
+  issue_comment:
+    types: [created]    # listens for /testivai approve commands
 
 concurrency:
   group: oss-visual-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write       # approve action commits updated baselines to the branch
   pull-requests: write  # post diff comment on PRs
   statuses: write       # set commit status (pass/fail indicator on the PR)
 
 jobs:
+
+  # ── Runs on every PR push ────────────────────────────────────────────────────
   oss-visual:
     name: Visual Regression (OSS)
+    if: github.event_name != 'issue_comment'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -80,3 +89,17 @@ jobs:
           report-dir: visual-report
           upload-artifact: true
           artifact-retention-days: 30
+
+  # ── Runs when a collaborator comments /testivai approve on the PR ─────────────
+  approve-baselines:
+    name: Approve Baselines
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request != null &&
+      startsWith(github.event.comment.body, '/testivai')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: mcbuddy/testivai-oss/approve@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
