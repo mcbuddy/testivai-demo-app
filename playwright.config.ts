@@ -1,6 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │  CLOUD LANE  —  playwright.config.ts                                     │
+ * ├──────────────────────────────────────────────────────────────────────────┤
+ * │  Tests: tests/                                                           │
+ * │  Run:   npm test  (or: npx playwright test)                              │
+ * │                                                                          │
+ * │  Requires a TestivAI account + API key:                                  │
+ * │    export TESTIVAI_API_KEY=<your-key>                                    │
+ * │                                                                          │
+ * │  What you get with cloud:                                                │
+ * │    • REVEAL AI — 5-layer comparison (pixel, DOM, CSS, layout, AI)        │
+ * │    • Team dashboard, history, smart baselines                            │
+ * │    • Baseline approval workflow via testivai.io UI                       │
+ * │                                                                          │
+ * │  To switch to the OSS (no-account) lane instead:                        │
+ * │    npm run test:oss   →  uses playwright.oss.config.ts                   │
+ * │                          reads .testivai/baselines/, no API key needed   │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ *
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({

@@ -1,15 +1,22 @@
 /**
- * OSS Smoke Tests — visual regression with @testivai/witness-playwright
+ * OSS LANE — tests-oss/oss-smoke.spec.ts
  *
- * These tests run in local mode: no API key needed, no cloud account.
- * Baselines live in `.testivai/baselines/`; reports go to `visual-report/`.
+ * Runs with:  npm run test:oss  (uses playwright.oss.config.ts)
  *
- * First run  → all snapshots are "new" (baselines written)
+ * No API key or TestivAI account needed — runs fully offline.
+ * Baselines live in `.testivai/baselines/` (committed to the repo).
+ * Report written to visual-report/index.html after every run.
+ *
+ * What you get:
+ *   • Pixel diff  — detects any visual change
+ *   • DOM diff    — "DOM unchanged" = likely render noise, not a real change
+ *   • HTML report + CI artifact via mcbuddy/testivai-oss@v1
+ *
+ * First run  → all snapshots are "new" (baselines written to .testivai/baselines/)
  * Later runs → snapshots compared against baselines; diffs flagged in report
  *
- * The report also shows a DOM noise hint:
- *   • "DOM unchanged" → pixel diff is likely render noise (font hinting, AA)
- *   • "DOM changed"   → structural change detected; review carefully
+ * Looking for the cloud (REVEAL AI) lane? → tests/component-showcase.spec.ts
+ *   Run: export TESTIVAI_API_KEY=<your-key> && npm test
  */
 import { test, expect } from '@playwright/test';
 import { testivai } from '@testivai/witness-playwright';

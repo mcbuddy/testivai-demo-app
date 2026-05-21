@@ -1,3 +1,20 @@
+/**
+ * CLOUD LANE — tests/component-showcase.spec.ts
+ *
+ * Runs with:  npm test  (uses playwright.config.ts)
+ *
+ * Requires:   export TESTIVAI_API_KEY=<your-key>
+ *             Without the key the reporter falls back to local mode
+ *             (same pixel diff as OSS, without cloud REVEAL AI features).
+ *
+ * Cloud features enabled with the key:
+ *   • REVEAL AI — 5-layer comparison (pixel, DOM, CSS, layout, AI)
+ *   • Team dashboard, run history, smart baselines
+ *   • Baseline approval via testivai.io UI
+ *
+ * Looking for the no-account lane? → tests-oss/oss-smoke.spec.ts
+ *   Run: npm run test:oss
+ */
 import { test, expect } from '@playwright/test';
 import { testivai } from '@testivai/witness-playwright';
 
