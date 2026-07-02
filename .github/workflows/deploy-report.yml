@@ -1,0 +1,73 @@
+name: Deploy Live Demo Report
+
+# Publishes a real TestivAI OSS visual report to GitHub Pages so anyone can
+# see the tool's output — including the DOM-aware "render noise" hints — with
+# zero install and zero signup. Regenerated fresh on every push to main.
+#
+# Because the committed baselines are rendered on one platform and CI renders
+# on Linux, most snapshots come back as "changed" but DOM-identical — which is
+# exactly the render-noise case TestivAI's DOM diff is designed to flag. The
+# published report is therefore a live demonstration of the noise hint.
+#
+# Live URL: https://www.budisugianto.com/testivai-demo-app/
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests-oss/**'
+      - 'playwright.oss.config.ts'
+      - '.testivai/**'
+      - '.github/workflows/deploy-report.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; don't cancel an in-progress one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-report:
+    name: Build report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npx playwright install chromium --with-deps
+
+      - run: npm run build
+
+      - name: Generate OSS visual report
+        # The witness reporter never fails the run on a visual diff, so this
+        # exits 0 and always produces visual-report/index.html.
+        run: npm run test:oss
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: visual-report
+
+  deploy:
+    name: Deploy to Pages
+    needs: build-report
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
