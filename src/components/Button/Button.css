@@ -29,16 +29,16 @@
 
 /* Primary variant — aligned with header gradient (indigo) */
 .button--primary {
-  background-color: #4f46e5;
+  background-color: #0d9488;
   color: white;
 }
 
 .button--primary:hover:not(:disabled) {
-  background-color: #4338ca;
+  background-color: #0f766e;
 }
 
 .button--primary:active:not(:disabled) {
-  background-color: #3730a3;
+  background-color: #115e59;
 }
 
 /* Secondary variant */
