@@ -72,17 +72,15 @@ Baselines live under `.testivai/baselines/<snapshot-name>/` and are committed to
 
 The [`mcbuddy/testivai-oss@v1`](https://github.com/mcbuddy/testivai-oss) action then copies the approved screenshots into `.testivai/baselines/`, commits them back to the PR branch, and CI re-runs — approved snapshots now pass. ✅
 
-**Locally:** after reviewing `visual-report/index.html`, promote the current run's captures to baselines:
+**Locally:** after reviewing `visual-report/index.html`, promote the current run's captures to baselines with the CLI:
 
 ```bash
-node -e "
-  const { BaselineStore } = require('@testivai/witness/baselines');
-  const s = new BaselineStore(process.cwd());
-  s.listTemp().forEach(n => s.approve(n));
-"
+npx testivai approve --all        # or: npx testivai approve <snapshot-name>
 ```
 
 Then commit and push the updated `.testivai/baselines/` files.
+
+> Requires `@testivai/witness` ≥ the release containing the CLI bin fix; on older versions `npx testivai` may resolve to an init-only CLI.
 
 ## Visual regression — Cloud lane (optional)
 
