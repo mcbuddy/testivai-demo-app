@@ -28,3 +28,6 @@ playwright-report/
 *.njsproj
 *.sln
 *.sw?
+
+# local experiment sandboxes (contain .env files)
+/examples/
