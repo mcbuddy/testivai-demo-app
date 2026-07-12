@@ -1,120 +1,154 @@
 # Component Showcase Tests
 
-This directory contains Playwright tests for the Component Showcase application, including visual regression testing using the testivAI Visual Regression library.
+Playwright tests for the Component Showcase app, including visual regression
+testing with [TestivAI](https://testiv.ai).
 
-## Test Structure
+Visual regression runs in **two lanes**. The **OSS lane is the default** — it
+needs no account and runs fully offline. The **cloud lane is an optional
+upgrade** that adds AI-powered comparison and a team dashboard. Everything you
+need for day-to-day visual testing works in the OSS lane alone.
 
-### Functional Tests
-- **Component Display Tests**: Verify that all components (Button, Card, Alert) are properly displayed
-- **Component Variants Tests**: Test different variants of each component (primary/secondary buttons, success/error alerts)
-- **Interactive Tests**: Test button click functionality
-- **Responsive Design Tests**: Test layout on different viewport sizes
+| | OSS lane (default) | Cloud lane (upgrade) |
+|---|---|---|
+| Command | `npm run test:oss` | `npm test` |
+| Config | `playwright.oss.config.ts` | `playwright.config.ts` |
+| Tests | `tests-oss/` | `tests/` |
+| Account / API key | None | `TESTIVAI_API_KEY` required |
+| Pixel diff | ✅ | ✅ |
+| DOM diff (render-noise detection) | ✅ | ✅ |
+| Report | `visual-report/index.html` | dashboard.testiv.ai |
+| Baselines | committed in `.testivai/baselines/` | smart / remote baselines |
+| Approval | local store + `/testivai approve` on PR | dashboard.testiv.ai UI |
+| REVEAL AI — CSS/layout/semantic 5-layer diff | — | ⭐ |
+| Team dashboard, history | — | ⭐ |
 
-### Visual Regression Tests
-- **Full Page Screenshots**: Capture complete page layouts
-- **Component Section Screenshots**: Individual screenshots of each component section
-- **Responsive Screenshots**: Visual tests for mobile and tablet viewports
+---
 
-## Running Tests
+## OSS lane (default)
 
-### Prerequisites
-Make sure the development server is running or configure the `webServer` in `playwright.config.ts`.
-
-### Test Commands
+No API key or TestivAI account needed — runs fully offline. Baselines live in
+`.testivai/baselines/` and are committed to the repo. A report is written to
+`visual-report/index.html` after every run.
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests with UI mode (interactive)
-npm run test:ui
-
-# Run tests in headed mode (see browser)
-npm run test:headed
-
-# Debug tests
-npm run test:debug
-
-# Run specific test file
-npx playwright test component-showcase.spec.ts
-
-# Run only visual regression tests
-npx playwright test --grep "visual regression"
-
-# Run only responsive design tests
-npx playwright test --grep "responsive design"
-
-# Visual regression specific commands
-npm run compare              # Compare current screenshots with baselines
-npm run update-baselines     # Update baseline images with current screenshots
+npm run test:oss            # run the OSS visual regression suite
+npm run test:oss:headed     # same, with a visible browser
 ```
 
-## Visual Regression Testing
+What you get:
 
-The tests use the `testivai-visual-regression` library to perform visual regression testing. Screenshots are stored in:
+- **Pixel diff** — detects any visual change.
+- **DOM diff** — flags render noise when pixels change but the DOM is the same.
+- **HTML report** — `visual-report/index.html` (+ `results.json`), uploadable as
+  a CI artifact.
+- **GitHub Action** `mcbuddy/testivai-oss@v1` — posts a PR diff comment and sets
+  a commit status.
 
-- **Baselines**: `./.testivai/visual-regression/baseline/` - Reference images
-- **Comparisons**: `./.testivai/visual-regression/compare/` - Current test images
-- **Diffs**: Generated automatically when differences are detected
+### Approving baselines
 
-### First Run
-On the first run, baseline images will be created. Subsequent runs will compare against these baselines.
+After reviewing the report, approve new/changed baselines locally:
 
-### Updating Baselines
-If visual changes are intentional, you can update the baselines by running tests with the update flag or manually replacing the baseline images.
-
-## Test Configuration
-
-The tests are configured in `playwright.config.ts` with:
-- Chromium desktop browser support
-- Automatic dev server startup
-- HTML reporting
-- Trace collection on failures
-
-## Visual Regression Configuration
-
-The testivAI configuration includes:
-- **Framework**: Playwright
-- **Diff Threshold**: 0.1 (10% difference tolerance)
-- **Baseline Directory**: `./.testivai/visual-regression/baseline`
-- **Compare Directory**: `./.testivai/visual-regression/compare`
-
-## GitHub Actions CI/CD
-
-### CI Workflow (`.github/workflows/ci.yml`)
-Automatically runs on push and pull requests to `main` and `develop` branches:
-- Installs dependencies and Playwright browsers
-- Builds the application
-- Runs all Playwright tests including visual regression
-- Uploads test reports and visual regression artifacts
-
-### Visual Regression Approval Workflow (`.github/workflows/testivai-approve.yml`)
-Allows approving/rejecting visual changes directly from PR comments:
-- Triggered by PR comments containing `/approve-visuals` or `/reject-visuals`
-- Processes approvals and updates baseline images
-- Commits changes back to the PR branch
-- Posts visual regression reports to PR comments
-
-#### Approval Commands:
 ```bash
-# Approve all visual changes
-/approve-visuals
-
-# Approve specific files
-/approve-visuals login.png header.png
-
-# Reject specific files
-/reject-visuals settings.png
+node -e "
+  const { BaselineStore } = require('@testivai/witness/baselines');
+  const s = new BaselineStore(process.cwd());
+  s.listTemp().forEach(n => s.approve(n));
+"
 ```
 
-## Test Coverage
+Then commit and push the updated `.testivai/baselines/` files.
 
-The test suite covers:
+On a pull request you can approve straight from a comment — comment
+`/testivai approve` and the **OSS Visual Regression** workflow copies the
+approved screenshots into `.testivai/baselines/`, commits them to the PR branch,
+and re-runs CI. See `.github/workflows/playwright-oss.yml`.
+
+### OSS configuration (`.testivai/config.json`)
+
+```json
+{
+  "mode": "local",
+  "threshold": 0.1,
+  "reportDir": "visual-report",
+  "autoOpen": false
+}
+```
+
+- `mode: local` — no cloud calls.
+- `threshold: 0.1` — 10% per-pixel difference tolerance.
+- Global `ignoreSelectors` (for masking dynamic content) are also read from this
+  file — see `tests-oss/ignore-selectors.spec.ts`.
+
+---
+
+## Cloud lane (optional upgrade)
+
+The cloud lane is for teams that want more than pixel + DOM diffing. It requires
+a TestivAI account and an API key:
+
+```bash
+export TESTIVAI_API_KEY=<your-key>
+npm test                    # run the cloud suite (tests/)
+npm run test:ui             # interactive UI mode
+npm run test:headed         # visible browser
+npm run test:debug          # step-through debugging
+```
+
+What the cloud adds on top of OSS:
+
+- **REVEAL AI** — 5-layer comparison (pixel, DOM, CSS, layout, and AI), which
+  catches CSS/layout/semantic regressions a pixel diff alone cannot.
+- **Team dashboard, history, and smart baselines** at dashboard.testiv.ai.
+- **Baseline approval workflow** via the dashboard.testiv.ai UI.
+
+Cloud comparison is tuned in `testivai.config.ts` (layout/AI sensitivity,
+confidence, performance timings). That file is read by the cloud lane only — the
+OSS lane ignores it and uses `.testivai/config.json` instead.
+
+---
+
+## Functional tests
+
+Both lanes also exercise standard Playwright assertions:
+
+- **Component display** — Button, Card, and Alert render correctly.
+- **Component variants** — primary/secondary buttons, success/error alerts.
+- **Interactive behavior** — button click handling.
+- **Responsive design** — layout across viewport sizes.
+
+```bash
+npx playwright test component-showcase.spec.ts   # a specific file
+npx playwright test --grep "responsive design"   # by title
+```
+
+Each lane starts the Vite dev server automatically via Playwright's `webServer`,
+so you don't need to run `npm run dev` first.
+
+---
+
+## CI / GitHub Actions
+
+### `ci.yml` — functional tests
+Runs on push/PR to `main` and `develop`: installs deps + browsers, builds the
+app, runs `npm test`, and uploads the Playwright report.
+
+### `playwright-oss.yml` — OSS visual regression
+The live visual-regression workflow:
+
+- **On every PR push** — builds the app, runs `npm run test:oss`, uploads the
+  report, and posts a PR comment with the diff summary + commit status.
+- **On `/testivai approve` comment** — copies approved screenshots into
+  `.testivai/baselines/`, commits them to the PR branch, and re-runs CI.
+
+---
+
+## Test coverage
+
 - ✅ Component rendering and content
 - ✅ Component variants and states
 - ✅ Interactive functionality
 - ✅ Responsive design
-- ✅ Visual regression across different viewports
-- ✅ Cross-browser compatibility
-- ✅ Automated CI/CD with GitHub Actions
-- ✅ PR-based visual regression approval workflow
+- ✅ Visual regression (pixel + DOM) across viewports — OSS lane
+- ✅ AI / CSS / layout comparison (REVEAL) — cloud lane
+- ✅ Automated CI with GitHub Actions
+- ✅ PR-based baseline approval via `/testivai approve`

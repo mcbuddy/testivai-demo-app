@@ -13,7 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
  * │  What you get with cloud:                                                │
  * │    • REVEAL AI — 5-layer comparison (pixel, DOM, CSS, layout, AI)        │
  * │    • Team dashboard, history, smart baselines                            │
- * │    • Baseline approval workflow via testivai.io UI                       │
+ * │    • Baseline approval workflow via dashboard.testiv.ai UI                       │
  * │                                                                          │
  * │  To switch to the OSS (no-account) lane instead:                        │
  * │    npm run test:oss   →  uses playwright.oss.config.ts                   │

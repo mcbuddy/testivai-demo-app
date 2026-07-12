@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Stylized abstract technology circuit">
+  <defs>
+    <linearGradient id="techbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#4c1d95"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#techbg)"/>
+  <g stroke="#a78bfa" stroke-width="3" fill="none" opacity="0.8">
+    <path d="M40 150 H140 V90 H240"/>
+    <path d="M40 210 H180 V250 H300"/>
+    <path d="M240 90 V40 H340"/>
+    <path d="M300 250 H360 V150"/>
+    <path d="M140 150 V210"/>
+  </g>
+  <g fill="#22d3ee">
+    <circle cx="40" cy="150" r="7"/><circle cx="140" cy="90" r="7"/>
+    <circle cx="240" cy="90" r="7"/><circle cx="340" cy="40" r="7"/>
+    <circle cx="40" cy="210" r="7"/><circle cx="300" cy="250" r="7"/>
+    <circle cx="360" cy="150" r="7"/>
+  </g>
+  <rect x="170" y="125" width="60" height="60" rx="8" fill="#7c3aed" stroke="#c4b5fd" stroke-width="3"/>
+  <text x="200" y="162" font-family="monospace" font-size="22" fill="#ede9fe" text-anchor="middle">AI</text>
+</svg>

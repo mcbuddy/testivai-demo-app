@@ -2,6 +2,9 @@ import './App.css'
 import Button from './components/Button'
 import Card from './components/Card'
 import Alert from './components/Alert'
+import landscapeImg from './assets/cards/landscape.svg'
+import architectureImg from './assets/cards/architecture.svg'
+import technologyImg from './assets/cards/technology.svg'
 
 function App() {
   const handleButtonClick = (variant: string) => {
@@ -70,19 +73,19 @@ function App() {
             <Card
               title="Beautiful Landscape"
               text="Discover breathtaking views and natural wonders in this stunning landscape photography collection. Perfect for nature enthusiasts and photography lovers."
-              image="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+              image={landscapeImg}
               imageAlt="Beautiful mountain landscape with lake reflection"
             />
             <Card
               title="Modern Architecture"
               text="Explore contemporary architectural designs that blend form and function. These innovative structures represent the future of urban development."
-              image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop"
+              image={architectureImg}
               imageAlt="Modern glass building with geometric design"
             />
             <Card
               title="Technology Innovation"
               text="Stay ahead of the curve with the latest technological innovations. From AI to sustainable energy, discover what's shaping our future."
-              image="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+              image={technologyImg}
               imageAlt="Abstract technology and innovation concept"
             />
           </div>
@@ -96,13 +99,18 @@ function App() {
               This application now includes automated visual regression testing with TestivAI!
             </Alert>
             <div className="testivai-features">
-              <h3>Features Included:</h3>
+              <h3>Open Source — the default, no account needed:</h3>
               <ul>
-                <li>✅ Automated screenshot comparison</li>
-                <li>✅ GitHub Actions integration</li>
-                <li>✅ PR comment approvals with <code>/approve-visuals</code></li>
-                <li>✅ Responsive design testing</li>
-                <li>✅ Component-level visual testing</li>
+                <li>✅ Pixel + DOM diffing, runs fully offline</li>
+                <li>✅ Baselines committed in the repo (<code>.testivai/baselines/</code>)</li>
+                <li>✅ GitHub Actions: PR diff comment + commit status</li>
+                <li>✅ Approve right from the PR with <code>/testivai approve</code></li>
+                <li>✅ Responsive, component-level visual testing</li>
+              </ul>
+              <h3 style={{ marginTop: '1.5rem' }}>Cloud — optional upgrade for more:</h3>
+              <ul>
+                <li>⭐ REVEAL AI — 5-layer comparison (pixel, DOM, CSS, layout, AI)</li>
+                <li>⭐ Team dashboard, history & smart baselines</li>
               </ul>
             </div>
           </div>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Stylized mountain landscape with lake and sun">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#sky)"/>
+  <circle cx="310" cy="70" r="34" fill="#fde68a"/>
+  <polygon points="0,200 90,90 170,200" fill="#64748b"/>
+  <polygon points="90,90 120,130 60,130" fill="#f8fafc"/>
+  <polygon points="130,200 240,70 360,200" fill="#475569"/>
+  <polygon points="240,70 280,130 200,130" fill="#f1f5f9"/>
+  <rect y="200" width="400" height="100" fill="url(#water)"/>
+  <polygon points="130,200 240,200 200,240 170,240" fill="#7dd3fc" opacity="0.5"/>
+</svg>

@@ -13,9 +13,7 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:oss": "playwright test --config=playwright.oss.config.ts",
-    "test:oss:headed": "playwright test --config=playwright.oss.config.ts --headed",
-    "update-baselines": "npx testivai compare --update-baselines",
-    "compare": "npx testivai compare"
+    "test:oss:headed": "playwright test --config=playwright.oss.config.ts --headed"
   },
   "dependencies": {
     "react": "^19.1.0",

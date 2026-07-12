@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Stylized modern glass building">
+  <defs>
+    <linearGradient id="archsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c7d2fe"/>
+      <stop offset="1" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#archsky)"/>
+  <rect x="70" y="60" width="110" height="240" fill="url(#glass)"/>
+  <rect x="200" y="110" width="90" height="190" fill="#2563eb"/>
+  <rect x="305" y="150" width="60" height="150" fill="#1d4ed8"/>
+  <g fill="#bfdbfe" opacity="0.55">
+    <rect x="82" y="74" width="38" height="30"/><rect x="130" y="74" width="38" height="30"/>
+    <rect x="82" y="116" width="38" height="30"/><rect x="130" y="116" width="38" height="30"/>
+    <rect x="82" y="158" width="38" height="30"/><rect x="130" y="158" width="38" height="30"/>
+    <rect x="82" y="200" width="38" height="30"/><rect x="130" y="200" width="38" height="30"/>
+    <rect x="210" y="124" width="28" height="26"/><rect x="250" y="124" width="28" height="26"/>
+    <rect x="210" y="162" width="28" height="26"/><rect x="250" y="162" width="28" height="26"/>
+    <rect x="210" y="200" width="28" height="26"/><rect x="250" y="200" width="28" height="26"/>
+  </g>
+</svg>
