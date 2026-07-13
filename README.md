@@ -58,6 +58,7 @@ npm run test:oss
 - **First run:** every snapshot is "new" and baselines are written to `.testivai/baselines/`.
 - **Later runs:** screenshots are diffed against the committed baselines, and a self-contained report is written to `visual-report/index.html`.
 - When pixels change but the DOM is structurally identical, the report flags the diff as **likely render noise** (font hinting, anti-aliasing) instead of a real regression — this is the OSS DOM noise hint.
+- This project enables **`noiseAutoPass`** in `.testivai/config.json`, so DOM-identical diffs within 1% auto-pass (labeled `autoPassed` in the report) instead of demanding review. Captures are **stabilized** by default: animations frozen, caret hidden, web fonts awaited.
 
 Baselines live under `.testivai/baselines/<snapshot-name>/` and are committed to the repo — just `git add` them.
 
