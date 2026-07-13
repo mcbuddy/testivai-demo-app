@@ -2,5 +2,9 @@
   "mode": "local",
   "threshold": 0.1,
   "reportDir": "visual-report",
-  "autoOpen": false
+  "autoOpen": false,
+  "maxDiffPercent": 0,
+  "noiseAutoPass": true,
+  "noiseMaxDiffPercent": 1,
+  "stabilize": true
 }
