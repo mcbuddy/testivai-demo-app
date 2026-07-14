@@ -10,11 +10,12 @@ It runs against the **published** `@testivai/*` npm packages, so it doubles as a
 
 TestivAI ships in two lanes that share the same SDK install. This app is configured for **both**, side by side, so you can compare them:
 
-| | OSS lane (free, no account) | Cloud lane (REVEAL AI) |
+| | OSS lane (free, no account — **default**) | Cloud lane (REVEAL AI) |
 |---|---|---|
-| Run | `npm run test:oss` | `npm test` |
+| Run | `npm test` (TS) · `pytest tests-py/` (Python) | `npm run test:cloud` |
 | Playwright config | `playwright.oss.config.ts` | `playwright.config.ts` |
-| Tests | `tests-oss/` | `tests/` |
+| Tests | `tests-oss/` (TS), `tests-py/` (Python) | `tests-cloud/` |
+| CI workflow | [`playwright-oss.yml`](.github/workflows/playwright-oss.yml), [`python-oss.yml`](.github/workflows/python-oss.yml) | [`cloud-visual.yml`](.github/workflows/cloud-visual.yml) (main/weekly/manual, needs secret) |
 | Settings file | `.testivai/config.json` (`mode: "local"`) | `testivai.config.ts` |
 | Baselines | committed in `.testivai/baselines/` | stored in the cloud |
 | Comparison | pixel diff + DOM-tree noise hint | 5-layer REVEAL (pixel, DOM, CSS, layout, AI) |
@@ -109,7 +110,7 @@ Adds the REVEAL AI engine, a hosted dashboard, history, and smart baselines.
 
 ```bash
 export TESTIVAI_API_KEY=<your-key>
-npm test
+npm run test:cloud
 ```
 
 Cloud behavior is tuned in `testivai.config.ts` (layout/AI sensitivity, performance capture). Results appear in the hosted dashboard.
@@ -123,7 +124,7 @@ testivai-demo-app/
 │       ├── Button/            # Primary / Secondary, normal / disabled
 │       ├── Card/              # title, text, image, hover effects
 │       └── Alert/             # Success / Error variants
-├── tests/                     # CLOUD lane specs (REVEAL AI)
+├── tests-cloud/               # CLOUD lane specs (REVEAL AI)
 ├── tests-oss/                 # OSS lane specs (local pixel + DOM diff)
 │   ├── oss-smoke.spec.ts
 │   └── ignore-selectors.spec.ts
@@ -146,13 +147,15 @@ npm run build          # type-check + production build
 npm run preview        # preview production build
 npm run lint           # eslint
 
-npm test               # CLOUD lane visual regression (needs TESTIVAI_API_KEY)
-npm run test:ui        # cloud lane, Playwright UI mode
-npm run test:headed    # cloud lane, headed browser
-npm run test:debug     # cloud lane, debug mode
+npm test                 # OSS lane (default — no account needed)
+npm run test:oss         # same as npm test
+npm run test:oss:headed  # OSS lane, headed browser
+npm run test:py          # Python OSS lane (see tests-py/, needs pip setup)
 
-npm run test:oss        # OSS lane visual regression (no account)
-npm run test:oss:headed # OSS lane, headed browser
+npm run test:cloud        # CLOUD lane (needs TESTIVAI_API_KEY)
+npm run test:cloud:ui     # cloud lane, Playwright UI mode
+npm run test:cloud:headed # cloud lane, headed browser
+npm run test:cloud:debug  # cloud lane, debug mode
 ```
 
 ## Learn more

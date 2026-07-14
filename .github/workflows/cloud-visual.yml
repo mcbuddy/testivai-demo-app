@@ -1,0 +1,56 @@
+# Cloud lane — uploads captures to the hosted TestivAI service (REVEAL
+# analysis, dashboard, smart baselines). Needs the TESTIVAI_API_KEY secret,
+# so it runs on main pushes, a weekly schedule, and manual dispatch — and
+# skips gracefully on forks/PRs where the secret is absent.
+name: Cloud Visual Regression
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * 1' # weekly sanity check of the hosted lane
+  workflow_dispatch:
+
+jobs:
+  visual-cloud:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TESTIVAI_API_KEY: ${{ secrets.TESTIVAI_API_KEY }}
+    steps:
+      - name: Check for API key
+        id: gate
+        run: |
+          if [ -n "$TESTIVAI_API_KEY" ]; then
+            echo "has-key=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-key=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::TESTIVAI_API_KEY not available — cloud lane skipped (expected on forks)"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.has-key == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.has-key == 'true'
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        if: steps.gate.outputs.has-key == 'true'
+        run: npm ci
+      - name: Install Playwright browsers
+        if: steps.gate.outputs.has-key == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Build application
+        if: steps.gate.outputs.has-key == 'true'
+        run: npm run build
+      - name: Run cloud visual tests
+        if: steps.gate.outputs.has-key == 'true'
+        run: npm run test:cloud
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always() && steps.gate.outputs.has-key == 'true'
+        with:
+          name: playwright-report-cloud
+          path: playwright-report/
+          retention-days: 30

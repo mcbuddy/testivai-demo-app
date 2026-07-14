@@ -10,9 +10,9 @@ need for day-to-day visual testing works in the OSS lane alone.
 
 | | OSS lane (default) | Cloud lane (upgrade) |
 |---|---|---|
-| Command | `npm run test:oss` | `npm test` |
+| Command | `npm test` / `npm run test:oss` | `npm run test:cloud` |
 | Config | `playwright.oss.config.ts` | `playwright.config.ts` |
-| Tests | `tests-oss/` | `tests/` |
+| Tests | `tests-oss/` (TS), `tests-py/` (Python) | `tests-cloud/` |
 | Account / API key | None | `TESTIVAI_API_KEY` required |
 | Pixel diff | ✅ | ✅ |
 | DOM diff (render-noise detection) | ✅ | ✅ |

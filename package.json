@@ -8,12 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed",
-    "test:debug": "playwright test --debug",
+    "test": "playwright test --config=playwright.oss.config.ts",
     "test:oss": "playwright test --config=playwright.oss.config.ts",
-    "test:oss:headed": "playwright test --config=playwright.oss.config.ts --headed"
+    "test:oss:headed": "playwright test --config=playwright.oss.config.ts --headed",
+    "test:cloud": "playwright test",
+    "test:cloud:ui": "playwright test --ui",
+    "test:cloud:headed": "playwright test --headed",
+    "test:cloud:debug": "playwright test --debug",
+    "test:py": "pytest tests-py/ -q"
   },
   "dependencies": {
     "react": "^19.1.0",
