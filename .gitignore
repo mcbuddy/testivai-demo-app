@@ -31,3 +31,7 @@ playwright-report/
 
 # local experiment sandboxes (contain .env files)
 /examples/
+
+# python venv for tests-py
+.venv-py/
+__pycache__/

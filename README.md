@@ -81,6 +81,25 @@ npx testivai approve --all        # or: npx testivai approve <snapshot-name>
 
 Then commit and push the updated `.testivai/baselines/` files.
 
+## Visual regression — Python lane (same baselines!)
+
+The `tests-py/` suite captures with **playwright-python + pytest** into the
+same `.testivai/` baselines, tolerances, and report as the TS tests —
+demonstrating the cross-language adapter contract:
+
+```bash
+pip install pytest pytest-playwright playwright \
+  "testivai @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+playwright install chromium
+npm run dev &          # or serve the built app
+BASE_URL=http://localhost:5173 pytest tests-py/ -q
+```
+
+The bundled pytest plugin runs `testivai report` at session end — one report
+covers snapshots from both languages (`py-*` alongside the `oss-*` ones), and
+`/testivai approve` on a PR handles all of them identically. CI:
+[`python-oss.yml`](.github/workflows/python-oss.yml).
+
 ## Visual regression — Cloud lane (optional)
 
 Adds the REVEAL AI engine, a hosted dashboard, history, and smart baselines.
@@ -108,6 +127,7 @@ testivai-demo-app/
 ├── tests-oss/                 # OSS lane specs (local pixel + DOM diff)
 │   ├── oss-smoke.spec.ts
 │   └── ignore-selectors.spec.ts
+├── tests-py/                  # Python lane (playwright-python + pytest, SAME baselines)
 ├── .testivai/
 │   ├── config.json            # OSS lane settings (mode: local, threshold)
 │   └── baselines/             # committed reference screenshots + DOM

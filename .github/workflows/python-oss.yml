@@ -1,0 +1,47 @@
+# Python OSS lane — playwright-python + pytest against the SAME .testivai/
+# baselines as the TS tests (tests-oss/). Report uploaded as an artifact;
+# the PR comment/status stays with the main playwright-oss.yml workflow.
+name: Python Visual Regression (OSS)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  visual-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install Python deps
+        run: |
+          pip install pytest pytest-playwright playwright \
+            "testivai @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+          playwright install chromium --with-deps
+
+      - name: Serve the built app
+        run: |
+          npx serve -s dist -l 5173 &
+          npx wait-on http://localhost:5173
+
+      - name: Run Python visual tests
+        env:
+          BASE_URL: http://localhost:5173
+        run: pytest tests-py/ -q
+
+      - name: Upload visual report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testivai-visual-report-python
+          path: visual-report/
