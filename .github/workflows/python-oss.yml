@@ -9,6 +9,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  pull-requests: write  # post diff comment on PRs
+  statuses: write       # per-lane commit status (TestivAI / visual (python))
+
 jobs:
   visual-python:
     runs-on: ubuntu-latest
@@ -39,19 +43,16 @@ jobs:
           BASE_URL: http://localhost:5173
         run: pytest tests-py/ -q
 
-      - name: Upload visual report
+      # Same reporter action as the TS lane, namespaced so the two lanes
+      # don't overwrite each other's commit status or PR comment. The
+      # artifact bundles visual-report/pending-baselines/ (CI's own
+      # captures) for baseline adoption.
+      - name: Post visual diff results + upload report
+        uses: mcbuddy/testivai-oss@v1
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: testivai-visual-report-python
-          path: visual-report/
-
-      # Current-run captures, so changed py-* baselines can be adopted
-      # from CI (baselines must come from the environment that compares
-      # them — Linux here; a macOS-captured baseline never matches).
-      - name: Upload pending baselines
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: testivai-pending-baselines-python
-          path: .testivai/temp/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          report-dir: visual-report
+          upload-artifact: true
+          artifact-name: testivai-visual-report-python
+          status-context: 'TestivAI / visual (python)'
