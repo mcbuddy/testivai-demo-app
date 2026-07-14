@@ -81,8 +81,6 @@ npx testivai approve --all        # or: npx testivai approve <snapshot-name>
 
 Then commit and push the updated `.testivai/baselines/` files.
 
-> Requires `@testivai/witness` ≥ the release containing the CLI bin fix; on older versions `npx testivai` may resolve to an init-only CLI.
-
 ## Visual regression — Cloud lane (optional)
 
 Adds the REVEAL AI engine, a hosted dashboard, history, and smart baselines.
