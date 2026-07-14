@@ -46,7 +46,14 @@ jobs:
         run: npm run build
       - name: Run cloud visual tests
         if: steps.gate.outputs.has-key == 'true'
-        run: npm run test:cloud
+        env:
+          TESTIVAI_MODE: cloud
+        # The OSS lane's .testivai/config.json ({ mode: "local" }) must not
+        # hijack this run. TESTIVAI_MODE=cloud handles it from witness>1.3.0;
+        # removing the CI checkout's copy covers older published versions.
+        run: |
+          rm -f .testivai/config.json
+          npm run test:cloud
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always() && steps.gate.outputs.has-key == 'true'
