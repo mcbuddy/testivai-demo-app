@@ -70,7 +70,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
+        run: npx playwright install chromium firefox webkit --with-deps
 
       - name: Build app
         run: npm run build

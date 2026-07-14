@@ -47,7 +47,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npx playwright install chromium --with-deps
+      - run: npx playwright install chromium firefox webkit --with-deps
 
       - run: npm run build
 

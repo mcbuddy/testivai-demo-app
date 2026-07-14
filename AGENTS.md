@@ -14,7 +14,11 @@ After changing any UI code (`src/**`, `index.html`, styles):
    npm run test:oss
    ```
 
-2. Read `visual-report/results.json` and act on each snapshot:
+2. Read `visual-report/results.json` and act on each snapshot. The OSS lane
+   runs on three engines, so each capture call appears three times with a
+   browser suffix (`oss-buttons__chromium`, `__firefox`, `__webkit`) — a real
+   UI change normally shows in all three; a diff in only one engine is
+   usually rendering noise specific to that browser.
    - `status: "changed"` with `dom.changed: true` → a real change. Compare
      `dom.summary` (added/removed elements, attribute changes, text changes)
      against what you intended. Unintended → fix your code and re-run.

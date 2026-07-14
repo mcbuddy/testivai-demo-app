@@ -37,8 +37,12 @@ TestivAI ships in two lanes that share the same SDK install. This app is configu
 git clone https://github.com/mcbuddy/testivai-demo-app.git
 cd testivai-demo-app
 npm install
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 ```
+
+> The OSS lane runs on all three Playwright engines — Chromium, Firefox,
+> and WebKit — with per-browser baselines (`oss-buttons__chromium`,
+> `__firefox`, `__webkit`). The cloud and Python lanes use Chromium.
 
 ### Run the app
 
@@ -58,6 +62,7 @@ npm run test:oss
 
 - **First run:** every snapshot is "new" and baselines are written to `.testivai/baselines/`.
 - **Later runs:** screenshots are diffed against the committed baselines, and a self-contained report is written to `visual-report/index.html`.
+- **Per-browser baselines:** with three engines configured, every snapshot exists once per browser (18 baselines from 6 capture calls) — engines rasterize differently, so each diffs only against itself.
 - When pixels change but the DOM is structurally identical, the report flags the diff as **likely render noise** (font hinting, anti-aliasing) instead of a real regression — this is the OSS DOM noise hint.
 - This project enables **`noiseAutoPass`** in `.testivai/config.json`, so DOM-identical diffs within 1% auto-pass (labeled `autoPassed` in the report) instead of demanding review. Captures are **stabilized** by default: animations frozen, caret hidden, web fonts awaited.
 

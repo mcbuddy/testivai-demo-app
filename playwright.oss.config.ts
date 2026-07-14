@@ -44,10 +44,20 @@ export default defineConfig({
     baseURL: `http://localhost:${process.env.TEST_SERVER_PORT || '5173'}`,
     trace: 'on-first-retry',
   },
+  // Three engines: baselines are keyed per project automatically
+  // (oss-buttons__chromium / __firefox / __webkit) — no collisions.
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
     },
   ],
   webServer: process.env.TEST_SERVER_PORT ? undefined : {
