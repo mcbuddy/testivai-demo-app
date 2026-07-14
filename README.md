@@ -63,6 +63,7 @@ npm run test:oss
 - **First run:** every snapshot is "new" and baselines are written to `.testivai/baselines/`.
 - **Later runs:** screenshots are diffed against the committed baselines, and a self-contained report is written to `visual-report/index.html`.
 - **Per-browser baselines:** with three engines configured, every snapshot exists once per browser (18 baselines from 6 capture calls) — engines rasterize differently, so each diffs only against itself.
+- **Baselines belong to CI's environment:** the committed baselines are captured on ubuntu (the CI runner). A local run on macOS or Windows will report diffs from OS font rasterization — that's expected, and it's why baseline updates here go through the PR `/testivai approve` flow (which adopts CI's own captures) rather than committing local screenshots.
 - When pixels change but the DOM is structurally identical, the report flags the diff as **likely render noise** (font hinting, anti-aliasing) instead of a real regression — this is the OSS DOM noise hint.
 - This project enables **`noiseAutoPass`** in `.testivai/config.json`, so DOM-identical diffs within 1% auto-pass (labeled `autoPassed` in the report) instead of demanding review. Captures are **stabilized** by default: animations frozen, caret hidden, web fonts awaited.
 

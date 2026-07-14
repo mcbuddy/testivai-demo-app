@@ -45,3 +45,13 @@ jobs:
         with:
           name: testivai-visual-report-python
           path: visual-report/
+
+      # Current-run captures, so changed py-* baselines can be adopted
+      # from CI (baselines must come from the environment that compares
+      # them — Linux here; a macOS-captured baseline never matches).
+      - name: Upload pending baselines
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testivai-pending-baselines-python
+          path: .testivai/temp/
