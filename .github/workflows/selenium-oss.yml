@@ -1,0 +1,65 @@
+# Selenium OSS lane — the native Selenium adapters (JS + Python bindings)
+# against the SAME .testivai/ baselines dir as the Playwright lanes.
+# Posts its own commit status / PR comment via status-context so it never
+# collides with the other lanes.
+name: Selenium Visual Regression (OSS)
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  pull-requests: write  # post diff comment on PRs
+  statuses: write       # per-lane commit status (TestivAI / visual (selenium))
+
+jobs:
+  visual-selenium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install Python deps
+        run: |
+          pip install pytest \
+            "testivai[selenium] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+
+      - name: Serve the built app
+        run: |
+          npx serve -s dist -l 5173 &
+          npx wait-on http://localhost:5173
+
+      # Chrome is preinstalled on ubuntu runners; Selenium Manager fetches
+      # the matching chromedriver automatically (Selenium 4.6+).
+      - name: Run Selenium visual tests (JS bindings)
+        env:
+          BASE_URL: http://localhost:5173
+        run: node tests-selenium-js/visual.test.js
+
+      - name: Run Selenium visual tests (Python bindings)
+        env:
+          BASE_URL: http://localhost:5173
+          TESTIVAI_AUTO_REPORT: '0'   # one report for both bindings, below
+        run: pytest tests-selenium-py/ -q
+
+      - name: Compare against baselines
+        run: npx testivai report -q
+
+      - name: Post visual diff results + upload report
+        uses: mcbuddy/testivai-oss@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          report-dir: visual-report
+          upload-artifact: true
+          artifact-name: testivai-visual-report-selenium
+          status-context: 'TestivAI / visual (selenium)'
