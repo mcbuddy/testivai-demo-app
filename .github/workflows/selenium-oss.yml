@@ -30,8 +30,7 @@ jobs:
         with: { python-version: '3.12' }
       - name: Install Python deps
         run: |
-          pip install pytest \
-            "testivai[selenium] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+          pip install pytest "testivai[selenium]"
 
       - name: Serve the built app
         run: |

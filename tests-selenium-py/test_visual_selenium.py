@@ -7,7 +7,7 @@ approve` flow as the Playwright lanes — the adapter contract only cares
 about the driver object.
 
 Run:
-    pip install "testivai[selenium] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+    pip install "testivai[selenium]"
     BASE_URL=http://localhost:5173 pytest tests-selenium-py/ -q
 
 Selenium Manager fetches the right chromedriver automatically (Selenium

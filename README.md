@@ -99,7 +99,7 @@ port:
 npm run test:selenium:js
 
 # Python (selenium + testivai[selenium])
-pip install pytest "testivai[selenium] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+pip install pytest "testivai[selenium]"
 npm run test:selenium:py
 ```
 
@@ -115,7 +115,7 @@ demonstrating the cross-language adapter contract:
 
 ```bash
 pip install pytest pytest-playwright playwright \
-  "testivai @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+  "testivai[playwright]"
 playwright install chromium
 npm run dev &          # or serve the built app
 BASE_URL=http://localhost:5173 pytest tests-py/ -q

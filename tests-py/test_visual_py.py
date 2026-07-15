@@ -6,7 +6,7 @@ SAME `.testivai/` baselines, config (tolerances, noiseAutoPass, stabilize),
 report, and `/testivai approve` flow as the TS tests in tests-oss/.
 
 Run:
-    pip install "testivai[playwright] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+    pip install "testivai[playwright]"
     playwright install chromium
     BASE_URL=http://localhost:5173 pytest tests-py/ -q
 
