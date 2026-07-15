@@ -88,6 +88,25 @@ npx testivai approve --all        # or: npx testivai approve <snapshot-name>
 
 Then commit and push the updated `.testivai/baselines/` files.
 
+## Visual regression — Selenium lanes (same baselines!)
+
+Native Selenium adapters, both bindings, against the same `.testivai/`
+baselines dir and report as the Playwright lanes — no sidecar, no debug
+port:
+
+```bash
+# JavaScript (selenium-webdriver + @testivai/witness-selenium)
+npm run test:selenium:js
+
+# Python (selenium + testivai[selenium])
+pip install pytest "testivai[selenium] @ git+https://github.com/mcbuddy/testivai-oss#subdirectory=python"
+npm run test:selenium:py
+```
+
+Both capture full-page on Chrome via CDP. Snapshots: `seljs-*` and
+`selpy-*`. CI runs them in `selenium-oss.yml` under their own commit
+status (`TestivAI / visual (selenium)`).
+
 ## Visual regression — Python lane (same baselines!)
 
 The `tests-py/` suite captures with **playwright-python + pytest** into the
@@ -135,6 +154,8 @@ testivai-demo-app/
 │   ├── oss-smoke.spec.ts
 │   └── ignore-selectors.spec.ts
 ├── tests-py/                  # Python lane (playwright-python + pytest, SAME baselines)
+├── tests-selenium-js/         # Selenium lane, JS bindings (@testivai/witness-selenium)
+├── tests-selenium-py/         # Selenium lane, Python bindings (testivai[selenium])
 ├── .testivai/
 │   ├── config.json            # OSS lane settings (mode: local, threshold)
 │   └── baselines/             # committed reference screenshots + DOM
