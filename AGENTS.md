@@ -24,7 +24,25 @@ After changing any UI code (`src/**`, `index.html`, styles):
      against what you intended. Unintended → fix your code and re-run.
      Intended → report it to the human with the summary.
    - `status: "changed"` with `dom.noiseHint: true` → likely render noise;
-     mention it, don't block.
+     mention it, don't block. **But** check `dom.styleCheck` first: when
+     `styleCheck === "mismatch"` the DOM is identical but computed styles
+     changed — this is a real change, not noise; report the elements named
+     in `dom.styleChanges.elements`.
+   - `regions[]` — each changed snapshot carries clustered regions. Prefer
+     reporting `regions[].elements[].selector` (which element changed) over
+     raw pixel percentages — it's more actionable.
+   - `regions[].classification === "shift"` with `shift: {dx, dy}` → pure
+     translation, content unchanged (same size, same style digest, new
+     position). Usually intentional layout movement; report as "element X
+     shifted by (dx, dy)" rather than a visual regression.
+   - `pageShift` → everything below a line moved by the same offset
+     (typically an inserted banner or removed heading). Check whether your
+     own change added or removed something above that line before treating
+     it as a regression.
+   - `masks[]` / `maskWarnings[]` → masks applied to the comparison. A
+     `maskWarning` means a selector mask could not resolve (stale selector,
+     missing element) — the mask was skipped and the warning says why;
+     surface it so the exclusion doesn't go unnoticed.
    - `status: "new"` → tell the human new baselines need approving.
 
 3. **Never run `testivai approve` yourself** — baseline approval is a human
