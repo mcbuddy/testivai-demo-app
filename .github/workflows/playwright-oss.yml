@@ -33,6 +33,10 @@ on:
       - '.testivai/baselines/**'
       - '.testivai/config.json'
       - '.github/workflows/playwright-oss.yml'
+      # A dependency bump changes the comparison engine itself — always
+      # re-verify the visual lane when the lockfile moves.
+      - 'package.json'
+      - 'package-lock.json'
   pull_request:
     branches: [main]
   issue_comment:
