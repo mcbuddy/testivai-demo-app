@@ -29,7 +29,7 @@
     "@eslint/js": "^9.25.0",
     "@playwright/test": "^1.53.1",
     "@testivai/witness": "^1.6.0",
-    "@testivai/witness-playwright": "^1.5.1",
+    "@testivai/witness-playwright": "^1.5.2",
     "@testivai/witness-selenium": "^0.1.0",
     "@types/node": "^24.0.3",
     "@types/react": "^19.1.2",
